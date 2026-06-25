@@ -7,6 +7,7 @@
 
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file (if it exists)
@@ -25,3 +26,9 @@ SCALER_PATH = Path(os.getenv("SCALER_PATH", str(BASE_DIR / "scaler.pkl")))
 PORT = int(os.getenv("PORT", 5000))
 DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 HOST = os.getenv("HOST", "0.0.0.0")
+
+# ---------- Observability ----------
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+ENABLE_METRICS = os.getenv("ENABLE_METRICS", "true").lower() == "true"
+SENTRY_DSN = os.getenv("SENTRY_DSN", "")
+SENTRY_ENVIRONMENT = os.getenv("SENTRY_ENVIRONMENT", "local")

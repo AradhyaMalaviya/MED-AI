@@ -1,13 +1,15 @@
-import pytest
 from unittest.mock import patch
+
+import pytest
+
 
 def test_predict_success(app_client, valid_prediction_data):
     """Test valid prediction request returns 200 with expected JSON structure."""
     response = app_client.post('/predict', json=valid_prediction_data)
-    
+
     assert response.status_code == 200
     data = response.get_json()
-    
+
     assert data["success"] is True
     assert "disease" in data
     assert "confidence" in data
@@ -21,11 +23,11 @@ def test_predict_success(app_client, valid_prediction_data):
 def test_predict_top5_sorted(app_client, valid_prediction_data):
     """Test that top5 is sorted by descending confidence."""
     response = app_client.post('/predict', json=valid_prediction_data)
-    
+
     assert response.status_code == 200
     data = response.get_json()
     top5 = data["top5"]
-    
+
     assert len(top5) == 5
     # Check if sorted in descending order
     confidences = [item["confidence"] for item in top5]
@@ -40,11 +42,11 @@ def test_predict_various_symptoms(app_client, valid_prediction_data, symptoms, e
     """Test with various symptom combinations to check risk level handling in predictions."""
     req_data = valid_prediction_data.copy()
     req_data.update(symptoms)
-    
+
     response = app_client.post('/predict', json=req_data)
     assert response.status_code == 200
     data = response.get_json()
-    
+
     assert data["risk"] == expected_risk
 
 def test_predict_model_not_loaded(app_client, valid_prediction_data):

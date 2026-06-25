@@ -1,14 +1,14 @@
-import pandas as pd
-import numpy as np
-import joblib
 import pickle
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder, StandardScaler, OrdinalEncoder
-from sklearn.impute import SimpleImputer
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.ensemble import RandomForestClassifier
 import warnings
+
+import joblib
+import pandas as pd
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.impute import SimpleImputer
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import LabelEncoder, OrdinalEncoder, StandardScaler
 
 warnings.filterwarnings('ignore')
 
@@ -21,8 +21,8 @@ df['disease_mapped'] = df['disease'].apply(lambda x: x if x in top_diseases else
 
 # 3. Features and Target
 features = [
-    'fever', 'cough', 'fatigue', 'difficulty_breathing', 'age', 'gender', 
-    'blood_pressure', 'cholesterol_level', 'outcome_variable', 
+    'fever', 'cough', 'fatigue', 'difficulty_breathing', 'age', 'gender',
+    'blood_pressure', 'cholesterol_level', 'outcome_variable',
     'age_scaled', 'bp_scaled', 'chol_scaled', 'risk_level'
 ]
 X = df[features]

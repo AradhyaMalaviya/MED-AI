@@ -15,8 +15,7 @@ APP_DIR = Path(__file__).resolve().parent.parent
 if str(APP_DIR) not in sys.path:
     sys.path.insert(0, str(APP_DIR))
 
-from app import calculate_risk_level
-
+from app import calculate_risk_level  # noqa: E402
 
 # ============================================================================
 # HIGH risk: symptom_count >= 3 AND (age > 60 OR blood_pressure == 2)

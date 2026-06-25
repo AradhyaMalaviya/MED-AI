@@ -3,23 +3,25 @@
 # Save this as: app.py
 # ============================================================================
 
-from flask import Flask, request, jsonify, render_template
-from flask_cors import CORS
-import sys
 import json
+import logging
 import pickle
+import sys
+import time
+
+import joblib
 import numpy as np
 import pandas as pd
-import joblib
-import logging
 import sklearn.compose._column_transformer as _sklearn_column_transformer
+from flask import Flask, Response, g, jsonify, render_template, request
+from flask_cors import CORS
 from sklearn.impute import SimpleImputer
 
 import config
 
 # ---------- Logging Configuration ----------
 logging.basicConfig(
-    level=logging.INFO,
+    level=getattr(logging, config.LOG_LEVEL, logging.INFO),
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
 )
 logger = logging.getLogger("medicare")
@@ -71,6 +73,57 @@ def patch_sklearn_pickle_compatibility(estimator=None):
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend-backend communication
+
+metrics = {
+    "requests_total": 0,
+    "errors_total": 0,
+    "prediction_requests_total": 0,
+    "prediction_failures_total": 0,
+    "request_duration_ms_sum": 0.0,
+    "request_duration_ms_count": 0,
+}
+
+if config.SENTRY_DSN:
+    try:
+        import sentry_sdk
+        from sentry_sdk.integrations.flask import FlaskIntegration
+
+        sentry_sdk.init(
+            dsn=config.SENTRY_DSN,
+            environment=config.SENTRY_ENVIRONMENT,
+            integrations=[FlaskIntegration()],
+            traces_sample_rate=0.0,
+        )
+        logger.info("Sentry error tracking enabled")
+    except ImportError:
+        logger.warning("SENTRY_DSN is set but sentry-sdk is not installed")
+
+@app.before_request
+def start_request_timer():
+    g.request_start_time = time.perf_counter()
+
+@app.after_request
+def log_request(response):
+    start_time = getattr(g, "request_start_time", None)
+    duration_ms = 0.0
+    if start_time is not None:
+        duration_ms = (time.perf_counter() - start_time) * 1000
+
+    logger.info(
+        "%s %s - %s - %.2fms",
+        request.method,
+        request.path,
+        response.status_code,
+        duration_ms,
+    )
+
+    metrics["requests_total"] += 1
+    metrics["request_duration_ms_sum"] += duration_ms
+    metrics["request_duration_ms_count"] += 1
+    if response.status_code >= 500:
+        metrics["errors_total"] += 1
+
+    return response
 
 # ============================================================================
 # LOAD ALL MODELS AND DATA
@@ -154,7 +207,7 @@ def validate_input(data):
         Tuple of (is_valid: bool, errors: list[str]).
     """
     errors = []
-    
+
     validations = {
         'age': (0, 120),
         'gender': (0, 1),
@@ -165,19 +218,19 @@ def validate_input(data):
         'bloodPressure': (0, 2),
         'cholesterol': (0, 2)
     }
-    
+
     for field, (min_val, max_val) in validations.items():
         if field not in data:
             errors.append(f"Missing required field: '{field}'")
             continue
-            
+
         try:
             val = int(data[field])
             if not (min_val <= val <= max_val):
                 errors.append(f"Field '{field}' must be between {min_val} and {max_val}.")
         except (ValueError, TypeError):
             errors.append(f"Field '{field}' must be an integer.")
-            
+
     return len(errors) == 0, errors
 
 
@@ -224,6 +277,8 @@ def health_check():
         'status': 'healthy',
         'model_loaded': best_model is not None,
         'encoder_loaded': label_encoder is not None,
+        'scaler_loaded': scaler is not None,
+        'medicine_db_loaded': bool(medicine_db),
         'message': 'Backend is running!'
     })
 
@@ -236,25 +291,59 @@ def list_models():
         'diseases_count': len(label_encoder.classes_) if label_encoder else 0
     })
 
+@app.route("/metrics", methods=["GET"])
+def metrics_endpoint():
+    if not config.ENABLE_METRICS:
+        return jsonify({
+            "success": False,
+            "error": "Metrics disabled",
+        }), 404
+
+    average_duration = 0.0
+    if metrics["request_duration_ms_count"]:
+        average_duration = (
+            metrics["request_duration_ms_sum"] / metrics["request_duration_ms_count"]
+        )
+
+    body = "\n".join([
+        "# HELP medicare_requests_total Total HTTP requests processed.",
+        "# TYPE medicare_requests_total counter",
+        f"medicare_requests_total {metrics['requests_total']}",
+        "# HELP medicare_errors_total Total HTTP 5xx responses.",
+        "# TYPE medicare_errors_total counter",
+        f"medicare_errors_total {metrics['errors_total']}",
+        "# HELP medicare_prediction_requests_total Total prediction requests.",
+        "# TYPE medicare_prediction_requests_total counter",
+        f"medicare_prediction_requests_total {metrics['prediction_requests_total']}",
+        "# HELP medicare_prediction_failures_total Total failed prediction attempts.",
+        "# TYPE medicare_prediction_failures_total counter",
+        f"medicare_prediction_failures_total {metrics['prediction_failures_total']}",
+        "# HELP medicare_request_duration_ms_avg Average request duration in milliseconds.",
+        "# TYPE medicare_request_duration_ms_avg gauge",
+        f"medicare_request_duration_ms_avg {average_duration:.2f}",
+        "",
+    ])
+    return Response(body, mimetype="text/plain")
+
 @app.route('/predict', methods=['POST', 'OPTIONS'])
 def predict():
     """Main prediction endpoint"""
-    
+
     # Handle CORS preflight
     if request.method == 'OPTIONS':
         return jsonify({'status': 'ok'}), 200
-    
+
     try:
         # Get data from request
         data = request.get_json()
-        
+
         if not data:
             return jsonify({
                 'success': False,
                 'error': 'No data provided',
                 'message': 'Please send JSON data'
             }), 400
-        
+
         is_valid, errors = validate_input(data)
         if not is_valid:
             return jsonify({
@@ -263,9 +352,10 @@ def predict():
                 'message': 'Invalid input data',
                 'details': errors
             }), 400
-            
-        logger.info("Received prediction request — data: %s", data)
-        
+
+        metrics["prediction_requests_total"] += 1
+        logger.info("Received prediction request")
+
         # Extract features with defaults
         fever = int(data.get('fever', 0))
         cough = int(data.get('cough', 0))
@@ -276,31 +366,33 @@ def predict():
         blood_pressure = int(data.get('bloodPressure', 1))
         cholesterol = int(data.get('cholesterol', 1))
         model_choice = data.get('model', 'rf')
-        
+
         logger.info("Patient: Age %d, Gender %s", age, 'M' if gender else 'F')
         logger.info("Symptoms: Fever=%d, Cough=%d, Fatigue=%d, Breathing=%d",
                      fever, cough, fatigue, difficulty_breathing)
-        
+
         # Check if model is loaded
         if best_model is None:
+            metrics["prediction_failures_total"] += 1
             return jsonify({
                 'success': False,
                 'error': 'Model not loaded',
                 'message': 'ML model files not found. Please ensure .pkl files are in the correct location.'
             }), 500
-        
+
         # Check if scaler is loaded
         if scaler is None:
+            metrics["prediction_failures_total"] += 1
             return jsonify({
                 'success': False,
                 'error': 'Scaler not loaded',
                 'message': 'scaler.pkl not found. Cannot produce correct predictions without it.'
             }), 500
-        
+
         # Calculate risk level (needed as model input feature)
         symptom_count = fever + cough + fatigue + difficulty_breathing
         risk_level_str = calculate_risk_level(symptom_count, age, blood_pressure)
-        
+
         # Prepare input for prediction — match exact training data format
         input_dict = {
             'fever': ['Yes' if fever else 'No'],
@@ -314,31 +406,31 @@ def predict():
             'outcome_variable': ['Positive' if symptom_count >= 2 else 'Negative'],
             'risk_level': [risk_level_str],
         }
-        
+
         input_df = pd.DataFrame(input_dict)
-        
+
         # Apply the scaler to produce correctly scaled features
         scaled_cols = ["age", "blood_pressure", "cholesterol_level"]
         scaled_values = scaler.transform(input_df[scaled_cols])
         input_df[["age_scaled", "bp_scaled", "chol_scaled"]] = scaled_values
-        
+
         logger.info("Input DataFrame columns: %s", list(input_df.columns))
         logger.info("Input DataFrame shape: %s", input_df.shape)
-        
+
         # Make prediction
         prediction = best_model.predict(input_df)[0]
         probabilities = best_model.predict_proba(input_df)[0]
-        
+
         # Get disease name
         predicted_disease = label_encoder.classes_[prediction]
         main_confidence = float(probabilities[prediction] * 100)
-        
+
         logger.info("Prediction: %s (%.1f%%)", predicted_disease, main_confidence)
-        
+
         # Get top 5 predictions
         top_5_idx = np.argsort(probabilities)[-5:][::-1]
         top_5_predictions = []
-        
+
         for idx in top_5_idx:
             disease_name = label_encoder.classes_[idx]
             confidence = float(probabilities[idx] * 100)
@@ -346,18 +438,18 @@ def predict():
                 'disease': disease_name,
                 'confidence': round(confidence, 2)
             })
-        
+
         # Use the risk level already computed for the model input
         risk_level = risk_level_str.lower()
-        
+
         logger.info("Risk Level: %s", risk_level.upper())
-        
+
         # Get treatment info
         treatment = medicine_db.get(predicted_disease, {
             'medicines': ['⚕️ Consult doctor for specific treatment'],
             'advice': ['📞 Schedule appointment with healthcare provider']
         })
-        
+
         # Return response
         response = {
             'success': True,
@@ -370,18 +462,19 @@ def predict():
             'model_used': model_choice,
             'timestamp': pd.Timestamp.now().isoformat()
         }
-        
+
         logger.info("Sending response for disease: %s", predicted_disease)
-        
+
         return jsonify(response), 200
-        
-    except Exception as e:
-        logger.exception("Prediction failed — %s", str(e))
-        
+
+    except Exception:
+        metrics["prediction_failures_total"] += 1
+        logger.exception("Prediction failed")
+
         return jsonify({
             'success': False,
-            'error': str(e),
-            'message': 'Prediction failed. Check server logs for details.'
+            'error': 'Prediction failed',
+            'message': 'Prediction failed. Please try again later.'
         }), 500
 
 # ============================================================================
@@ -397,5 +490,5 @@ if __name__ == '__main__':
     logger.info("Frontend should connect to: http://localhost:%d/predict", config.PORT)
     logger.info("To test: Send POST request to /predict endpoint")
     logger.info("=" * 60)
-    
+
     app.run(debug=config.DEBUG, host=config.HOST, port=config.PORT)

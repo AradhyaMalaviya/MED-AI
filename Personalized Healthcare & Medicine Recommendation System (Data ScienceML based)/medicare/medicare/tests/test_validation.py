@@ -15,8 +15,7 @@ APP_DIR = Path(__file__).resolve().parent.parent
 if str(APP_DIR) not in sys.path:
     sys.path.insert(0, str(APP_DIR))
 
-from app import validate_input
-
+from app import validate_input  # noqa: E402
 
 # ---------- Helper: build a valid payload (all fields present & in range) ----
 
