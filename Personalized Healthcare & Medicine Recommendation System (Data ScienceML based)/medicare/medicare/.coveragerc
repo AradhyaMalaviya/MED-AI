@@ -1,0 +1,23 @@
+# ============================================================================
+# Coverage Configuration — MediCare AI
+# ============================================================================
+
+[run]
+source = .
+omit =
+    tests/*
+    __pycache__/*
+    venv/*
+    .venv/*
+
+[report]
+show_missing = True
+precision = 2
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if __name__ == .__main__.
+    raise NotImplementedError
+
+[html]
+directory = htmlcov

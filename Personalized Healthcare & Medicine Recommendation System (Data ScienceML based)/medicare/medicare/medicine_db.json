@@ -1,0 +1,198 @@
+{
+    "Influenza": {
+        "medicines": [
+            "💊 Oseltamivir (Tamiflu) 75mg - Twice daily for 5 days",
+            "💊 Acetaminophen 500mg - Every 6 hours for fever",
+            "💊 Ibuprofen 400mg - Every 8 hours for body aches",
+            "💧 Plenty of fluids - 8-10 glasses daily"
+        ],
+        "advice": [
+            "🛏️ REST: Get 8-10 hours of sleep",
+            "💧 HYDRATION: Drink water, juice, warm liquids",
+            "🏠 ISOLATION: Stay home for 7-10 days",
+            "🤧 HYGIENE: Cover mouth, wash hands frequently",
+            "🌡️ MONITOR: Check temperature twice daily",
+            "📞 SEEK HELP: If breathing difficulty or chest pain"
+        ]
+    },
+    "Asthma": {
+        "medicines": [
+            "💨 Albuterol Inhaler - 2 puffs every 4-6 hours as needed",
+            "💨 Fluticasone 110mcg - 2 puffs twice daily",
+            "💊 Montelukast 10mg - Once daily at bedtime",
+            "🆘 Emergency rescue inhaler always accessible"
+        ],
+        "advice": [
+            "🚭 AVOID: Smoke, dust, pollen, cold air",
+            "💨 BREATHING: Practice breathing exercises",
+            "🏃 EXERCISE: Moderate with proper warm-up",
+            "📊 MONITOR: Keep peak flow readings",
+            "🆘 EMERGENCY: Use rescue inhaler, call 911",
+            "💊 COMPLIANCE: Never skip medications"
+        ]
+    },
+    "Diabetes": {
+        "medicines": [
+            "💊 Metformin 500mg - Twice daily with meals",
+            "💉 Insulin (if prescribed) - Per schedule",
+            "📊 Blood glucose test strips",
+            "🍬 Glucose tablets for emergencies"
+        ],
+        "advice": [
+            "🍽️ DIET: Low carb, high fiber meals",
+            "🏃 EXERCISE: 30 minutes daily",
+            "📊 MONITORING: Test 3-4 times daily",
+            "👣 FOOT CARE: Inspect daily",
+            "💉 INSULIN: Store properly, rotate sites",
+            "🚨 HYPOGLYCEMIA: Treat immediately"
+        ]
+    },
+    "Hypertension": {
+        "medicines": [
+            "💊 Lisinopril 10mg - Once daily morning",
+            "💊 Amlodipine 5mg - Once daily",
+            "💊 Losartan 50mg - Once daily",
+            "🧂 Low sodium diet (<1500mg/day)"
+        ],
+        "advice": [
+            "🧂 DIET: Drastically limit salt",
+            "🏃 EXERCISE: 30-45 minutes daily",
+            "📈 MONITOR: Check BP daily",
+            "😌 STRESS: Meditation, yoga",
+            "⚖️ WEIGHT: Lose 5-10% if overweight",
+            "🚫 AVOID: Alcohol, smoking, caffeine"
+        ]
+    },
+    "Pneumonia": {
+        "medicines": [
+            "💊 Amoxicillin 500mg - Three times daily 7-10 days",
+            "💊 Azithromycin 500mg - Once daily 5 days",
+            "💊 Acetaminophen for fever",
+            "💨 Oxygen therapy if O2 < 92%"
+        ],
+        "advice": [
+            "💊 ANTIBIOTICS: Complete FULL course",
+            "💧 FLUIDS: Warm liquids continuously",
+            "🛏️ REST: Bed rest 1-2 weeks",
+            "🌡️ MONITOR: Temp, breathing, O2",
+            "🚨 EMERGENCY: Worsening breathing",
+            "🔄 FOLLOW-UP: X-ray after 6 weeks"
+        ]
+    },
+    "Common Cold": {
+        "medicines": [
+            "💊 Acetaminophen 500mg - Every 6 hours",
+            "💊 Pseudoephedrine 30mg - Every 6 hours",
+            "💊 Vitamin C 1000mg - Once daily",
+            "🍯 Honey with warm lemon water"
+        ],
+        "advice": [
+            "💧 HYDRATION: Warm liquids",
+            "🛏️ REST: Extra sleep",
+            "🤧 HYGIENE: Wash hands frequently",
+            "🏠 STAY HOME: Avoid spreading",
+            "🍯 HONEY: Natural cough suppressant",
+            "⏱️ DURATION: Resolves in 7-10 days"
+        ]
+    },
+    "Bronchitis": {
+        "medicines": [
+            "💨 Albuterol inhaler - 2 puffs every 4-6 hrs",
+            "💊 Prednisone 20mg - Once daily 5 days",
+            "💊 Dextromethorphan cough syrup",
+            "💧 Warm mist humidifier"
+        ],
+        "advice": [
+            "💨 HUMIDITY: Use humidifier 24/7",
+            "☕ WARM DRINKS: Tea with honey",
+            "🚭 AVOID: Smoking, all irritants",
+            "🛏️ REST: No strenuous activity",
+            "🌡️ MONITOR: Fever >3 days see doctor",
+            "⏱️ COUGH: May last 2-3 weeks"
+        ]
+    },
+    "Depression": {
+        "medicines": [
+            "💊 Sertraline (Zoloft) 50mg - Once daily",
+            "💊 Fluoxetine (Prozac) 20mg - Morning",
+            "🧠 Cognitive Behavioral Therapy weekly",
+            "🏃 Exercise 30 minutes daily"
+        ],
+        "advice": [
+            "🧠 THERAPY: Weekly counseling essential",
+            "👥 SUPPORT: Join support group",
+            "🏃 EXERCISE: Daily activity crucial",
+            "😴 SLEEP: Regular 7-8 hour schedule",
+            "🍽️ NUTRITION: Balanced meals",
+            "⚠️ CRISIS: Call 988 if needed"
+        ]
+    },
+    "Stroke": {
+        "medicines": [
+            "🚨 CALL 911 IMMEDIATELY",
+            "💊 Aspirin 325mg - CHEW ONE now",
+            "💉 tPA - Hospital only, <4.5 hours",
+            "💊 BP medications - Hospital"
+        ],
+        "advice": [
+            "🚨 EMERGENCY: Life-threatening",
+            "⏱️ TIME CRITICAL: Minutes matter",
+            "📱 FAST: Face, Arm, Speech, Time",
+            "🏥 HOSPITAL: Immediate care",
+            "🚫 DO NOT: Give food/water",
+            "🔄 RECOVERY: Rehab required"
+        ]
+    },
+    "Anxiety Disorders": {
+        "medicines": [
+            "💊 Sertraline 50mg - Once daily",
+            "💊 Buspirone 10mg - Twice daily",
+            "💊 Alprazolam 0.25mg - As needed",
+            "🧘 CBT therapy weekly"
+        ],
+        "advice": [
+            "🧘 RELAXATION: Deep breathing 3x daily",
+            "☕ LIMIT: Reduce caffeine, alcohol",
+            "😴 SLEEP: 7-8 hours nightly",
+            "📱 APPS: Use Calm, Headspace",
+            "🏃 EXERCISE: Regular activity",
+            "💬 THERAPY: CBT most effective"
+        ]
+    },
+    "Migraine": {
+        "medicines": [
+            "💊 Ibuprofen 400mg - Every 6 hours as needed",
+            "💊 Sumatriptan 50mg - At onset of migraine",
+            "💊 Propranolol 40mg - Once daily for prevention"
+        ],
+        "advice": [
+            "🕶️ ENVIRONMENT: Rest in a quiet, dark room",
+            "🧊 REMEDY: Apply cold compress to forehead",
+            "💧 HYDRATION: Drink plenty of water",
+            "📝 TRACK: Keep a migraine diary to identify triggers"
+        ]
+    },
+    "Osteoporosis": {
+        "medicines": [
+            "💊 Alendronate 70mg - Once weekly",
+            "💊 Calcium Carbonate 500mg - Twice daily",
+            "💊 Vitamin D3 1000 IU - Once daily"
+        ],
+        "advice": [
+            "🏃 EXERCISE: Weight-bearing and muscle-strengthening exercises",
+            "🚭 AVOID: Smoking and excessive alcohol",
+            "⚖️ BALANCE: Fall prevention strategies",
+            "🍽️ DIET: Rich in calcium and Vitamin D"
+        ]
+    },
+    "Other": {
+        "medicines": [
+            "⚕️ Consult doctor for specific treatment"
+        ],
+        "advice": [
+            "📞 Schedule appointment with healthcare provider",
+            "🌡️ MONITOR: Track your symptoms closely",
+            "📝 LOG: Keep a diary of any new or worsening symptoms"
+        ]
+    }
+}

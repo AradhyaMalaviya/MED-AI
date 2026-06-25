@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare AI — AI-Powered Healthcare Diagnosis Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="/" class="logo">⚕️ MediCare AI</a>
+            <button class="hamburger">☰</button>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/" class="active">Home</a></li>
+                    <li><a href="#diagnosis">Diagnosis</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero fade-in">
+            <h1>AI-Powered Healthcare Diagnosis</h1>
+            <p>Advanced machine learning algorithms analyze your symptoms to provide accurate disease predictions and personalized treatment recommendations.</p>
+            <a href="#diagnosis" class="btn-primary">Start Diagnosis</a>
+        </section>
+
+        <!-- Stats Bar -->
+        <div class="stats-bar fade-in">
+            <div class="stat-item"><span class="stat-icon">🎯</span><span class="stat-text">95%+ Accuracy</span></div>
+            <div class="stat-item"><span class="stat-icon">🦠</span><span class="stat-text">10+ Diseases</span></div>
+            <div class="stat-item"><span class="stat-icon">⚡</span><span class="stat-text">Instant Results</span></div>
+            <div class="stat-item"><span class="stat-icon">🕒</span><span class="stat-text">24/7 Available</span></div>
+        </div>
+
+        <!-- Main Diagnosis Card -->
+        <div class="glass-card glass-card-top-border fade-in" id="diagnosis">
+            
+            <!-- Diagnosis Form -->
+            <div id="formSection">
+                <h2 class="section-title">📋 Select Your Symptoms</h2>
+                <div class="symptoms-grid">
+                    <div class="symptom-card" onclick="toggleSymptom('fever', this)">
+                        <div class="symptom-icon">🤒</div>
+                        <div class="symptom-name">Fever</div>
+                    </div>
+                    <div class="symptom-card" onclick="toggleSymptom('cough', this)">
+                        <div class="symptom-icon">😷</div>
+                        <div class="symptom-name">Cough</div>
+                    </div>
+                    <div class="symptom-card" onclick="toggleSymptom('fatigue', this)">
+                        <div class="symptom-icon">😴</div>
+                        <div class="symptom-name">Fatigue</div>
+                    </div>
+                    <div class="symptom-card" onclick="toggleSymptom('breathing', this)">
+                        <div class="symptom-icon">🫁</div>
+                        <div class="symptom-name">Diff. Breathing</div>
+                    </div>
+                </div>
+
+                <h2 class="section-title">👤 Patient Details</h2>
+                <div class="details-grid">
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" class="form-control" min="1" max="120" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" class="form-control">
+                            <option value="0">Female</option>
+                            <option value="1">Male</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bloodPressure">Blood Pressure</label>
+                        <select id="bloodPressure" class="form-control">
+                            <option value="0">Low</option>
+                            <option value="1" selected>Normal</option>
+                            <option value="2">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cholesterol">Cholesterol Level</label>
+                        <select id="cholesterol" class="form-control">
+                            <option value="0">Low</option>
+                            <option value="1" selected>Normal</option>
+                            <option value="2">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <h2 class="section-title">🤖 Select AI Model</h2>
+                <div class="model-selector">
+                    <div class="model-card active" onclick="selectModel('rf', this)">
+                        <div style="font-size: 2rem;">🌲</div>
+                        <h4>Random Forest</h4>
+                        <p>Best Overall Accuracy</p>
+                    </div>
+                    <div class="model-card" onclick="selectModel('gb', this)">
+                        <div style="font-size: 2rem;">📈</div>
+                        <h4>Gradient Boosting</h4>
+                        <p>Fast & Accurate</p>
+                    </div>
+                    <div class="model-card" onclick="selectModel('lr', this)">
+                        <div style="font-size: 2rem;">📊</div>
+                        <h4>Logistic Regression</h4>
+                        <p>Simple & Efficient</p>
+                    </div>
+                </div>
+
+                <button class="btn-primary predict-btn" id="predictBtn">
+                    <span>🔬</span> Analyze & Diagnose
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-container" id="loadingState">
+                <div class="spinner"></div>
+                <div class="loading-text" id="loadingText">Analyzing symptoms...</div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="results">
+                <!-- Content injected via JS -->
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Error Toast -->
+    <div class="toast toast-error" id="errorToast">
+        <span>⚠️</span>
+        <div id="errorMsg">Connection Error</div>
+        <button class="toast-action" onclick="predict()">Retry</button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="disclaimer">
+                <h4><span style="font-size: 1.2rem;">⚠️</span> Medical Disclaimer</h4>
+                <p>This AI-powered diagnosis tool is for informational purposes only and should NOT replace professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. In case of emergency, call 911 immediately.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="/">Home</a>
+                <a href="#diagnosis">Diagnosis Tool</a>
+                <a href="/about">About Us</a>
+                <a href="/contact">Contact</a>
+            </div>
+            <div class="copyright">
+                &copy; 2024-2026 MediCare AI. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About MediCare AI — AI-Powered Healthcare Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <a href="/" class="logo">⚕️ MediCare AI</a>
+            <button class="hamburger">☰</button>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/#diagnosis">Diagnosis</a></li>
+                    <li><a href="/about" class="active">About</a></li>
+                    <li><a href="/contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero fade-in">
+            <h1>About MediCare AI</h1>
+            <p>Empowering healthcare decisions with artificial intelligence</p>
+        </section>
+
+        <section class="glass-card fade-in">
+            <h2 class="section-title">Our Mission</h2>
+            <div class="mission-text">
+                <p style="margin-bottom: 1rem;">MediCare AI is a cutting-edge machine learning platform that analyzes symptoms, age, gender, blood pressure, and cholesterol to predict diseases with 95%+ accuracy.</p>
+                <p style="margin-bottom: 1rem;">Built for rapid diagnosis in remote areas, clinics, and personal health monitoring. We aim to make healthcare insights accessible, instant, and reliable.</p>
+                <p>Our system processes thousands of predictions per minute with a robust Flask API backend, providing real-time personalized treatment recommendations.</p>
+            </div>
+        </section>
+
+        <section class="fade-in" style="margin-bottom: 3rem;">
+            <h2 class="section-title">Key Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Instant Predictions</h3>
+                    <p>95%+ accuracy using ensemble ML models (Random Forest, Gradient Boosting, Logistic Regression).</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💊</div>
+                    <h3>Treatment Database</h3>
+                    <p>Comprehensive medicine and medical advice tailored for 15+ different conditions.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Risk Assessment</h3>
+                    <p>Dynamic Low/Medium/High risk scoring based on patient vitals and confidence metrics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Scalable API</h3>
+                    <p>Robust Flask backend capable of handling over 1000 requests per minute with low latency.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card fade-in">
+            <h2 class="section-title">How It Works</h2>
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Input Details</h3>
+                        <p>Enter your symptoms and basic patient details (age, vitals) into our secure portal.</p>
+                    </div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>AI Analysis</h3>
+                        <p>Our trained ML models process your data against extensive medical datasets in milliseconds.</p>
+                    </div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Diagnosis</h3>
+                        <p>Receive an accurate disease prediction along with a detailed confidence score and differential diagnosis.</p>
+                    </div>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3>Recommendations</h3>
+                        <p>Get personalized treatment recommendations, medicine suggestions, and recovery advice.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="glass-card fade-in">
+            <h2 class="section-title" style="text-align: center;">Technology Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-badge">Python</div>
+                <div class="tech-badge">Flask API</div>
+                <div class="tech-badge">Scikit-learn</div>
+                <div class="tech-badge">Pandas</div>
+                <div class="tech-badge">NumPy</div>
+                <div class="tech-badge">Joblib</div>
+                <div class="tech-badge">HTML/CSS/JS</div>
+            </div>
+        </section>
+
+        <section class="cta-section fade-in">
+            <h2 class="section-title">Ready to get started?</h2>
+            <p style="color: var(--neutral-300); margin-bottom: 2rem;">Experience the power of AI-driven healthcare diagnosis today.</p>
+            <a href="/#diagnosis" class="btn-primary">Start Diagnosis</a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="disclaimer">
+                <h4>⚠️ Medical Disclaimer</h4>
+                <p>This AI-powered diagnosis tool is for informational purposes only and should NOT replace professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition. In case of emergency, call 911 immediately.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="/">Home</a>
+                <a href="/#diagnosis">Diagnosis Tool</a>
+                <a href="/about">About Us</a>
+                <a href="/contact">Contact</a>
+            </div>
+            <div class="copyright">
+                &copy; 2024-2026 MediCare AI. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
