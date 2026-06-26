@@ -26,6 +26,7 @@ SCALER_PATH = Path(os.getenv("SCALER_PATH", str(BASE_DIR / "scaler.pkl")))
 PORT = int(os.getenv("PORT", 5000))
 DEBUG = os.getenv("DEBUG", "false").lower() == "true"
 HOST = os.getenv("HOST", "0.0.0.0")
+ALLOWED_ORIGINS = [orig.strip() for orig in os.getenv("ALLOWED_ORIGINS", "*").split(",")]
 
 # ---------- Observability ----------
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()

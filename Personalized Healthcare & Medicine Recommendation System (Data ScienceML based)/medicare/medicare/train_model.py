@@ -2,6 +2,7 @@ import pickle
 import warnings
 
 import joblib
+import sklearn
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
@@ -78,4 +79,4 @@ print(f"Test Accuracy: {test_acc:.4f}")
 joblib.dump(model_pipeline, 'best_model.pkl')
 print("Saved best_model.pkl")
 
-print("Retraining completed successfully on current scikit-learn version:", joblib.__version__)
+print("Retraining completed successfully on current scikit-learn version:", sklearn.__version__)

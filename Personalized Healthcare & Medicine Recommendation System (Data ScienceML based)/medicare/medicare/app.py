@@ -72,7 +72,7 @@ def patch_sklearn_pickle_compatibility(estimator=None):
     return patched_imputers
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for frontend-backend communication
+CORS(app, resources={r"/*": {"origins": config.ALLOWED_ORIGINS}})  # Enable CORS with restricted origins
 
 metrics = {
     "requests_total": 0,
@@ -163,25 +163,8 @@ try:
     logger.info("Medicine database loaded from %s", config.MEDICINE_DB_PATH)
 except Exception as e:
     logger.error("Failed to load medicine database — %s: %s", type(e).__name__, e)
-    logger.warning("Medicine database not found — using default fallback")
-    medicine_db = {
-        'Influenza': {
-            'medicines': [
-                '💊 Oseltamivir (Tamiflu) 75mg - Take twice daily for 5 days',
-                '💊 Acetaminophen 500mg - Every 6 hours for fever',
-                '💊 Ibuprofen 400mg - Every 8 hours for body aches',
-                '💧 Increase fluid intake to 8-10 glasses daily'
-            ],
-            'advice': [
-                '🛏️ REST: Get 8-10 hours of sleep per night',
-                '💧 HYDRATION: Drink at least 8-10 glasses of water daily',
-                '🏠 ISOLATION: Stay home for 7 days',
-                '🤧 HYGIENE: Cover mouth when coughing',
-                '🌡️ MONITOR: Check temperature twice daily',
-                '📞 SEEK HELP: If difficulty breathing develops'
-            ]
-        }
-    }
+    logger.warning("Medicine database not found — API will return generic advice for all diseases.")
+    medicine_db = {}
 
 logger.info("Backend ready!")
 
@@ -331,7 +314,7 @@ def predict():
 
     try:
         # Get data from request
-        data = request.get_json()
+        data = request.get_json(silent=True)
 
         if not data:
             return jsonify({
@@ -379,7 +362,7 @@ def predict():
 
         # Scaler check removed per BUG-102
 
-        # Calculate risk level (needed as model input feature)
+        # Calculate risk level for the UI response
         symptom_count = fever + cough + fatigue + difficulty_breathing
         risk_level_str = calculate_risk_level(symptom_count, age, blood_pressure)
 
