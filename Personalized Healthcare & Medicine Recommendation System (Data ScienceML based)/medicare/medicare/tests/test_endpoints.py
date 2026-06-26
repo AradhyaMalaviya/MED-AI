@@ -7,7 +7,6 @@ def test_health_check(app_client):
     assert data['status'] == 'healthy'
     assert 'model_loaded' in data
     assert 'encoder_loaded' in data
-    assert 'scaler_loaded' in data
     assert 'medicine_db_loaded' in data
 
 def test_models_list(app_client):

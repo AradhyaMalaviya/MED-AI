@@ -226,7 +226,7 @@ All critical issues are now **RESOLVED**:
 
 | Capability | Target State | Current State | Gap |
 |---|---|---|---|
-| ML Serving | Synchronized features via sklearn Pipeline & scaler | Preprocessed inputs via `scaler.transform()` | None ✅ |
+| ML Serving | Synchronized features via sklearn Pipeline | Flask app uses consolidated pipeline; redundant scaling and leaky features removed | None ✅ |
 | Configuration | Environment variables (`.env`) | Managed via `config.py` | None ✅ |
 | Logging | Structured `logging` module | Structured logging with `'medicare'` logger | None ✅ |
 | Testing | ≥80% coverage (unit & integration) | 57 tests with 87.65% line coverage | None ✅ |
@@ -585,29 +585,11 @@ All critical issues are now **RESOLVED**:
 > [!CAUTION]
 > **INVIOLABLE CONSTRAINT:** ML features inputted into `best_model.pkl` MUST undergo the **exact same preprocessing/scaling transformations** that were applied during training in the notebook. Any deviation produces mathematically incorrect predictions.
 
-**Current violation:** Lines 433–448 of `app.py` bypass scaling by assigning raw values directly:
-```python
-# BROKEN — currently in app.py
-input_df["age_scaled"] = input_df["age"]       # ← WRONG: should be scaler.transform()
-input_df["bp_scaled"] = input_df["blood_pressure"]
-input_df["chol_scaled"] = input_df["cholesterol_level"]
-```
+**Resolution:** The machine learning pipeline was redesigned on 2026-06-26. Scaling is now performed internally via an sklearn `Pipeline` within the `best_model.pkl` artifact. Redundant manual scaling and leaky features (`outcome_variable`, `risk_level`) have been removed from the API inputs, fully satisfying this constraint.
 
-**Required fix:**
-```python
-# CORRECT — target implementation
-scaler = joblib.load(config.SCALER_PATH)
-scaled_cols = ["age", "blood_pressure", "cholesterol_level"]
-input_df[["age_scaled", "bp_scaled", "chol_scaled"]] = scaler.transform(input_df[scaled_cols])
-```
+### 13.3 — Scaler Export Requirement (DEPRECATED)
 
-### 13.3 — Scaler Export Requirement
-
-The `StandardScaler` (or `MinMaxScaler`) used during training must be:
-1. Located in the training notebooks (`Medicine_Recommendation_System.ipynb` or `Personalized_Medicine_Recommending_System (1).ipynb`)
-2. Exported as `scaler.pkl` via `joblib.dump(scaler, 'scaler.pkl')`
-3. Placed alongside the other `.pkl` artifacts in `medicare/medicare/`
-4. Validated: `scaler.feature_names_in_` must match the columns it was trained on
+As of 2026-06-26, this requirement is deprecated. The `StandardScaler` is now integrated into the sklearn `Pipeline` within `best_model.pkl`. The standalone `scaler.pkl` artifact is no longer exported or used by the API.
 
 ---
 

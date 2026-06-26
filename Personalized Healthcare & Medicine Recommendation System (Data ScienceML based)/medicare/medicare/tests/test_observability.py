@@ -20,5 +20,4 @@ def test_request_logging_avoids_payload_values(app_client, valid_prediction_data
     assert response.status_code == 200
     logs = "\n".join(record.getMessage() for record in caplog.records)
     assert "POST /predict" in logs
-    # Assume 30 is the age in valid_prediction_data
-    assert "30" not in logs
+    assert str(valid_prediction_data.get("age", "")) not in logs

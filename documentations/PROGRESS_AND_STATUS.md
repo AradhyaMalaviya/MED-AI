@@ -39,14 +39,14 @@ Based on the original implementation and architecture plans (`plansdaybyday.md`,
 ### 4. Testing Layer
 - **Test Infrastructure Setup:** A `tests/` directory has been created.
 - **Configuration Files:** `pytest.ini`, `.coveragerc`, and `.coverage` artifacts exist, demonstrating that the test framework is properly configured and tests are being run with coverage tracking.
-- **Detailed Test Counts:** The test suite contains 60 passing test functions across 5 files:
+- **Detailed Test Counts:** The test suite contains 59 passing test functions across 5 files:
   - `tests/test_endpoints.py`: 5 integration tests covering `/health`, `/models`, and page templates (`/`, `/about`, `/contact`).
   - `tests/test_predict.py`: 8 integration tests verifying model predictions, sorting of top 5, and model failure fallbacks.
   - `tests/test_risk_level.py`: 22 unit tests testing low, medium, and high risk levels with various demographics and symptom counts.
   - `tests/test_validation.py`: 21 unit tests covering valid payloads, type errors, out-of-range fields, and mixed errors.
   - `tests/test_observability.py`: 4 unit tests verifying the Prometheus metrics, request logging, and PHI prevention rules.
   - `tests/conftest.py` provides shared fixtures for client and mock models.
-- **Coverage Status:** Current line coverage on `app.py` is at **85.31%** (and **86.34%** overall), exceeding the 80% target. All 60 tests pass successfully.
+- **Coverage Status:** Current line coverage on `app.py` is at **85.57%** (and **86.64%** overall), exceeding the 80% target. All 59 tests pass successfully.
 
 ### 5. Frontend Modernization
 - **CSS Design System (style.css):** Custom-built premium design tokens (CSS variables) for typography (`Inter` and `Outfit` Google Fonts), Indigo primary palettes, Teal accents, responsive breakpoints at 768px, glassmorphism blur effects, and hover transitions.

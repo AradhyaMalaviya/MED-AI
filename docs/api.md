@@ -172,7 +172,6 @@ Provides operational health reporting for load balancers and container orchestra
   "status": "healthy",
   "model_loaded": true,
   "encoder_loaded": true,
-  "scaler_loaded": true,
   "medicine_db_loaded": true,
   "message": "Backend is running!"
 }
@@ -186,7 +185,6 @@ Exposed if the server process is alive but one or more critical machine learning
   "status": "degraded",
   "model_loaded": false,
   "encoder_loaded": true,
-  "scaler_loaded": false,
   "medicine_db_loaded": true,
   "message": "Critical dependencies are missing."
 }

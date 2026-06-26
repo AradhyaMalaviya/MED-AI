@@ -58,11 +58,4 @@ def test_predict_model_not_loaded(app_client, valid_prediction_data):
         assert data["success"] is False
         assert data["error"] == "Model not loaded"
 
-def test_predict_scaler_not_loaded(app_client, valid_prediction_data):
-    """Test scaler-not-loaded scenario returns 500."""
-    with patch("app.scaler", None):
-        response = app_client.post('/predict', json=valid_prediction_data)
-        assert response.status_code == 500
-        data = response.get_json()
-        assert data["success"] is False
-        assert data["error"] == "Scaler not loaded"
+

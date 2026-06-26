@@ -50,13 +50,6 @@ def _make_mock_encoder(num_classes=10):
     return mock
 
 
-def _make_mock_scaler():
-    """Create a mock StandardScaler that returns fixed scaled values."""
-    mock = MagicMock()
-    mock.transform.return_value = np.array([[-0.23, 0.01, 0.01]])
-    mock.feature_names_in_ = np.array(["age", "blood_pressure", "cholesterol_level"])
-    return mock
-
 
 # ---------- Fixtures ----------
 
@@ -72,14 +65,9 @@ def mock_encoder():
     return _make_mock_encoder()
 
 
-@pytest.fixture()
-def mock_scaler():
-    """A mock scaler returning fixed scaled values."""
-    return _make_mock_scaler()
-
 
 @pytest.fixture()
-def app_client(mock_model, mock_encoder, mock_scaler):
+def app_client(mock_model, mock_encoder):
     """Flask test client with all ML artifacts mocked out.
 
     This patches the module-level globals in ``app`` so that tests can
@@ -90,12 +78,10 @@ def app_client(mock_model, mock_encoder, mock_scaler):
     with patch.dict("app.__dict__", {
         "best_model": mock_model,
         "label_encoder": mock_encoder,
-        "scaler": mock_scaler,
     }):
         import app as app_module
         app_module.best_model = mock_model
         app_module.label_encoder = mock_encoder
-        app_module.scaler = mock_scaler
 
         app_module.app.config["TESTING"] = True
         with app_module.app.test_client() as client:

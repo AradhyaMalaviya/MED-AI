@@ -153,15 +153,7 @@ try:
 except Exception as e:
     logger.error("Failed to load disease_encoder.pkl — %s: %s", type(e).__name__, e)
 
-# ---------- Load scaler.pkl ----------
-scaler = None
-try:
-    scaler = joblib.load(config.SCALER_PATH)
-    logger.info("Scaler loaded from %s", config.SCALER_PATH)
-    logger.info("Scaler feature_names_in_: %s", list(scaler.feature_names_in_))
-except Exception as e:
-    logger.error("Failed to load scaler.pkl — %s: %s", type(e).__name__, e)
-    logger.warning("Without the scaler, predictions will be mathematically incorrect!")
+# ---------- Scaler removed per BUG-102 ----------
 
 # ============================================================================
 try:
@@ -273,14 +265,18 @@ def contact():
 @app.route('/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
-    return jsonify({
-        'status': 'healthy',
+    artifacts = {
         'model_loaded': best_model is not None,
         'encoder_loaded': label_encoder is not None,
-        'scaler_loaded': scaler is not None,
         'medicine_db_loaded': bool(medicine_db),
-        'message': 'Backend is running!'
-    })
+    }
+    critical_ok = artifacts['model_loaded'] and artifacts['encoder_loaded']
+    status_code = 200 if critical_ok else 503
+    return jsonify({
+        'status': 'healthy' if critical_ok else 'degraded',
+        **artifacts,
+        'message': 'Backend is running!' if critical_ok else 'Critical dependencies are missing.'
+    }), status_code
 
 @app.route('/models', methods=['GET'])
 def list_models():
@@ -365,11 +361,12 @@ def predict():
         gender = int(data.get('gender', 0))
         blood_pressure = int(data.get('bloodPressure', 1))
         cholesterol = int(data.get('cholesterol', 1))
-        model_choice = data.get('model', 'rf')
+        requested_model = data.get('model', 'rf')
+        actual_model_used = 'rf'
+        if requested_model != actual_model_used:
+            logger.info("Model '%s' requested but unavailable; served with '%s'", requested_model, actual_model_used)
 
-        logger.info("Patient: Age %d, Gender %s", age, 'M' if gender else 'F')
-        logger.info("Symptoms: Fever=%d, Cough=%d, Fatigue=%d, Breathing=%d",
-                     fever, cough, fatigue, difficulty_breathing)
+        # PHI logging removed to prevent data leakage
 
         # Check if model is loaded
         if best_model is None:
@@ -380,20 +377,13 @@ def predict():
                 'message': 'ML model files not found. Please ensure .pkl files are in the correct location.'
             }), 500
 
-        # Check if scaler is loaded
-        if scaler is None:
-            metrics["prediction_failures_total"] += 1
-            return jsonify({
-                'success': False,
-                'error': 'Scaler not loaded',
-                'message': 'scaler.pkl not found. Cannot produce correct predictions without it.'
-            }), 500
+        # Scaler check removed per BUG-102
 
         # Calculate risk level (needed as model input feature)
         symptom_count = fever + cough + fatigue + difficulty_breathing
         risk_level_str = calculate_risk_level(symptom_count, age, blood_pressure)
 
-        # Prepare input for prediction — match exact training data format
+        # Prepare input for prediction
         input_dict = {
             'fever': ['Yes' if fever else 'No'],
             'cough': ['Yes' if cough else 'No'],
@@ -402,17 +392,10 @@ def predict():
             'age': [age],
             'gender': ['male' if gender == 1 else 'female'],
             'blood_pressure': [blood_pressure],
-            'cholesterol_level': [cholesterol],
-            'outcome_variable': ['Positive' if symptom_count >= 2 else 'Negative'],
-            'risk_level': [risk_level_str],
+            'cholesterol_level': [cholesterol]
         }
 
         input_df = pd.DataFrame(input_dict)
-
-        # Apply the scaler to produce correctly scaled features
-        scaled_cols = ["age", "blood_pressure", "cholesterol_level"]
-        scaled_values = scaler.transform(input_df[scaled_cols])
-        input_df[["age_scaled", "bp_scaled", "chol_scaled"]] = scaled_values
 
         logger.info("Input DataFrame columns: %s", list(input_df.columns))
         logger.info("Input DataFrame shape: %s", input_df.shape)
@@ -459,7 +442,7 @@ def predict():
             'top5': top_5_predictions,
             'medicines': treatment.get('medicines', []),
             'advice': treatment.get('advice', []),
-            'model_used': model_choice,
+            'model_used': actual_model_used,
             'timestamp': pd.Timestamp.now().isoformat()
         }
 

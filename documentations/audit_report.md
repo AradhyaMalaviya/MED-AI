@@ -52,9 +52,9 @@ We executed the pytest test suite along with the coverage gate verification:
 .\venv\Scripts\python.exe -m pytest --cov-fail-under=80
 ```
 **Result**:
-- **Total Tests Run**: 60 (All passed)
-- **Total Coverage**: **86.34%** (Required coverage of 80% reached)
-  - `app.py`: 85.31%
+- **Total Tests Run**: 59 (All passed)
+- **Total Coverage**: **86.64%** (Required coverage of 80% reached)
+  - `app.py`: 85.57%
   - `config.py`: 100.00%
 
 ---

@@ -22,8 +22,7 @@ df['disease_mapped'] = df['disease'].apply(lambda x: x if x in top_diseases else
 # 3. Features and Target
 features = [
     'fever', 'cough', 'fatigue', 'difficulty_breathing', 'age', 'gender',
-    'blood_pressure', 'cholesterol_level', 'outcome_variable',
-    'age_scaled', 'bp_scaled', 'chol_scaled', 'risk_level'
+    'blood_pressure', 'cholesterol_level'
 ]
 X = df[features]
 y = df['disease_mapped']
@@ -38,16 +37,9 @@ with open('disease_encoder.pkl', 'wb') as f:
 print("Saved disease_encoder.pkl")
 print("Classes:", le.classes_)
 
-# 5. Create Standalone Scaler
-# The app uses a standalone scaler.pkl for 'age', 'blood_pressure', 'cholesterol_level'
-scaler = StandardScaler()
-scaler.fit(X[['age', 'blood_pressure', 'cholesterol_level']])
-joblib.dump(scaler, 'scaler.pkl')
-print("Saved standalone scaler.pkl")
-
-# 6. Build the Model Pipeline
-numeric_features = ['age', 'blood_pressure', 'cholesterol_level', 'age_scaled', 'bp_scaled', 'chol_scaled']
-categorical_features = ['fever', 'cough', 'fatigue', 'difficulty_breathing', 'gender', 'outcome_variable', 'risk_level']
+# 5. Build the Model Pipeline
+numeric_features = ['age', 'blood_pressure', 'cholesterol_level']
+categorical_features = ['fever', 'cough', 'fatigue', 'difficulty_breathing', 'gender']
 
 numeric_transformer = Pipeline(steps=[
     ('imputer', SimpleImputer(strategy='median')),

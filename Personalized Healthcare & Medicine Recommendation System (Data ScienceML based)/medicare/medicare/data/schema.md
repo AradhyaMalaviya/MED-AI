@@ -15,11 +15,11 @@ This document describes the exact schema of the `Cleaned_Dataset.csv` file used 
 | `gender` | String | `'male'`, `'female'` | The gender of the patient. |
 | `blood_pressure` | Integer | `0`, `1`, `2` | Encoded blood pressure level (e.g., 0=Low, 1=Normal, 2=High). |
 | `cholesterol_level` | Integer | `0`, `1`, `2` | Encoded cholesterol level (e.g., 0=Low, 1=Normal, 2=High). |
-| `outcome_variable` | String | `'Positive'`, `'Negative'` | Outcome indicator based on symptoms. |
-| `age_scaled` | Float | Unbounded | The standard-scaled version of `age`. |
-| `bp_scaled` | Float | Unbounded | The standard-scaled version of `blood_pressure`. |
-| `chol_scaled` | Float | Unbounded | The standard-scaled version of `cholesterol_level`. |
-| `risk_level` | String | `'Low'`, `'Medium'`, `'High'` | The computed risk level of the patient based on symptoms and vitals. |
+| `outcome_variable` | String | `'Positive'`, `'Negative'` | (Training-data only artifact, not a model input). Outcome indicator based on symptoms. |
+| `age_scaled` | Float | Unbounded | (Training-data only artifact). The standard-scaled version of `age`. |
+| `bp_scaled` | Float | Unbounded | (Training-data only artifact). The standard-scaled version of `blood_pressure`. |
+| `chol_scaled` | Float | Unbounded | (Training-data only artifact). The standard-scaled version of `cholesterol_level`. |
+| `risk_level` | String | `'Low'`, `'Medium'`, `'High'` | (Training-data only artifact, not a model input). The computed risk level of the patient based on symptoms and vitals. |
 
 ## Notes for API Preprocessing
 
@@ -28,4 +28,4 @@ The API `/predict` endpoint receives inputs numerically for some categorical fea
 - **Gender**: `1` (Male), `0` (Female)
 - **Blood Pressure & Cholesterol**: Passed as `0`, `1`, `2`
 
-The API transforms these raw values back into the text representations (e.g., `'Yes'`, `'No'`, `'male'`, `'female'`) expected by the pre-trained `best_model.pkl` pipeline, and applies the pre-fitted `scaler.pkl` to compute `age_scaled`, `bp_scaled`, and `chol_scaled` on the fly.
+The API transforms these raw values back into the text representations (e.g., `'Yes'`, `'No'`, `'male'`, `'female'`) expected by the pre-trained `best_model.pkl` pipeline. Scaling operations are handled natively within the `best_model.pkl` inference pipeline.

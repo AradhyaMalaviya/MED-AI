@@ -18,7 +18,7 @@ A modernized web frontend is available via HTML templates styled by a dedicated 
 
 | Capability | Target | Current | Gap |
 |---|---|---|---|
-| **ML Serving** | Synchronized features via sklearn Pipeline | Flask app loading scaler.pkl and performing scaler.transform() | None (Skew fully resolved) ✅ |
+| **ML Serving** | Synchronized features via sklearn Pipeline | Flask app uses consolidated pipeline; redundant scaling and leaky features removed | None (Skew fully resolved on 2026-06-26) ✅ |
 | **Configuration** | Environment variables (`.env`) | handled via config.py loading python-dotenv | None (Configured correctly) ✅ |
 | **Logging** | Structured `logging` module | Structured logging with 'medicare' logger | None (Observability implemented) ✅ |
 | **Testing** | >80% coverage (unit & integration) | 57 tests, 87.65% line coverage | None (Tests implemented) ✅ |
@@ -163,7 +163,7 @@ A modernized web frontend is available via HTML templates styled by a dedicated 
 ## 5. Current State Assessment
 
 ### 5.1 — What Is Working (Verified)
-* **Feature Scaling (No Skew)**: The API correctly loads `scaler.pkl` and transforms inputs via `scaler.transform()` before passing them to the model, solving the critical training-serving skew.
+* **Feature Scaling (No Skew)**: The API correctly uses a consolidated pipeline without redundant `scaler.pkl` or leaky features, solving the critical training-serving skew.
 * **Externalized Config**: All model, encoder, scaler, and database paths are loaded from `config.py` via environment variables.
 * **Structured Logging**: Replaced print statements with standard python logging under `'medicare'` logger.
 * **Automated Test Suite**: 57 tests run via `pytest` cover endpoints, inference, risk engine, and input validations, achieving 87.65% code coverage.
@@ -188,6 +188,14 @@ All critical technical debt has been successfully resolved:
 * **TD-003** (Unpinned pandas/numpy): **RESOLVED** ✅ (Pinned to stable pandas 3.0.3 and numpy 2.4.6).
 * **TD-004** (Print statement logging): **RESOLVED** ✅ (Proper logging module implemented).
 * **TD-005** (Zero test coverage): **RESOLVED** ✅ (Robust test suite with 87.65% coverage).
+* **TD-006** (`outcome_variable` synthesized): **RESOLVED** ✅ (Leaky feature removed on 2026-06-26).
+* **TD-007** (Numeric vitals scaled twice): **RESOLVED** ✅ (Consolidated Pipeline on 2026-06-26).
+* **TD-008** (`model` param ignored): **RESOLVED** ✅ (Honest API response on 2026-06-26).
+* **TD-009** (Hamburger menu): **RESOLVED** ✅ (JS handler added on 2026-06-26).
+* **TD-010** (Confidence type mismatch): **RESOLVED** ✅ (Type fixed on 2026-06-26).
+* **TD-011** (PHI leak vacuous test): **RESOLVED** ✅ (Test fixed on 2026-06-26).
+* **TD-012** (PHI leak in logs): **RESOLVED** ✅ (PHI log removed on 2026-06-26).
+* **TD-013** (`/health` doesn't report 503): **RESOLVED** ✅ (Endpoint reports 503 when degraded on 2026-06-26).
 
 ---
 
@@ -237,4 +245,4 @@ All critical technical debt has been successfully resolved:
 | **Q-002** | Do we intend to implement the deep learning and hybrid recommendation engines discussed in `Personalized Reco System.txt`? | Future work | LOW | **RESOLVED** ✅ (Architectural guidance documented in `docs/architectural_advisory.md`) |
 | **Q-003** | Should we configure a production-ready Web Server Gateway Interface (WSGI) like Gunicorn or uWSGI inside the Docker container? | Phase 4 | MEDIUM | **RESOLVED** ✅ (Gunicorn configured in `Dockerfile` and `docker-compose.yml`) |
 | **Q-004** | Do we require strict type hints using mypy as part of the linting suite? | Phase 4 | LOW | **RESOLVED** ✅ (Decided not to mandate mypy for this stage of deployment) |
-| **Q-005** | Are outcome_variable and risk_level inputs to the model? | Phase 2 | HIGH | **RESOLVED** ✅ (Mapped as input features and validated in `app.py`) |
+| **Q-005** | Are outcome_variable and risk_level inputs to the model? | Phase 2 | HIGH | **RESOLVED** ✅ (Removed from model inputs as they are training-data only artifacts) |

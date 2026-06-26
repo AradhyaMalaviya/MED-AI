@@ -16,6 +16,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }, observerOptions);
     
     document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    
+    // Hamburger menu logic
+    const hamburger = document.querySelector(".hamburger");
+    const navMenu = document.querySelector(".nav-links");
+    
+    if (hamburger && navMenu) {
+        hamburger.addEventListener("click", () => {
+            const isOpen = navMenu.classList.toggle("active");
+            hamburger.setAttribute("aria-expanded", String(isOpen));
+        });
+        
+        navMenu.querySelectorAll("a").forEach((link) =>
+            link.addEventListener("click", () => navMenu.classList.remove("active"))
+        );
+    }
 });
 
 // Toast Helper
@@ -269,13 +284,13 @@ function getMockPrediction(payload) {
     }
 
     return {
-        success: true, disease, confidence: confidence.toFixed(1), risk, model_used: payload.model,
+        success: true, disease, confidence: Number(confidence.toFixed(2)), risk, model_used: payload.model,
         top5: [
-            { disease, confidence: confidence.toFixed(1) },
-            { disease: 'Bronchitis', confidence: (confidence - 10).toFixed(1) },
-            { disease: 'Common Cold', confidence: (confidence - 20).toFixed(1) },
-            { disease: 'Sinusitis', confidence: (confidence - 25).toFixed(1) },
-            { disease: 'Allergic Rhinitis', confidence: (confidence - 30).toFixed(1) }
+            { disease, confidence: Number(confidence.toFixed(2)) },
+            { disease: 'Bronchitis', confidence: Number((confidence - 10).toFixed(2)) },
+            { disease: 'Common Cold', confidence: Number((confidence - 20).toFixed(2)) },
+            { disease: 'Sinusitis', confidence: Number((confidence - 25).toFixed(2)) },
+            { disease: 'Allergic Rhinitis', confidence: Number((confidence - 30).toFixed(2)) }
         ],
         medicines: [
             'Acetaminophen 500mg - Every 6 hours',

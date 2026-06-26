@@ -30,7 +30,7 @@ python -m ruff check .
 
 | Quality Criteria | Verification Method | Status | Sign-off Date |
 | :--- | :--- | :---: | :---: |
-| **Coverage Threshold ($\ge 80\%$)** | Verified overall application logic coverage at **86.34%**. | **PASSED** | 2026-06-25 |
+| **Coverage Threshold ($\ge 80\%$)** | Verified overall application logic coverage at **86.64%**. | **PASSED** | 2026-06-26 |
 | **Risk Boundary Calculation** | Unit tests cover all low/medium/high symptom & demographic limits. | **PASSED** | 2026-06-25 |
 | **API Endpoints Integration** | Full mock checks covering `/predict`, `/health`, and `/models`. | **PASSED** | 2026-06-25 |
 | **Schema Validation Integration** | Tests verifying bad payloads, out-of-range types, and missing blocks. | **PASSED** | 2026-06-25 |
