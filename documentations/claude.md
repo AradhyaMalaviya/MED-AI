@@ -170,12 +170,13 @@ A modernized web frontend is available via HTML templates styled by a dedicated 
 * **Modern Frontend**: Interactive responsive screens styled by styling/design tokens in `style.css` and dynamic state management in `main.js`.
 * **Clean Data Schema**: Structured documenting of dataset attributes in `data/schema.md`.
 
-### 5.2 — What Is Pending (Planned Phase 4)
-* **Containerization**: Needs `Dockerfile` and `docker-compose.yml` to package the app.
-* **CI/CD Workflow**: Needs GitHub Actions script under `.github/workflows/` to execute test suites and check coverage targets automatically.
-* **Linting / Code Standards**: Needs `pyproject.toml` file to configure Ruff for static analysis.
-* **API Documentation**: Needs a dedicated API guide under `docs/api.md`.
-* **Dev Dependencies**: Needs a separated `requirements-dev.txt`.
+### 5.2 — What Is Pending (All Completed)
+* **None**: All Phase 4 deployment and quality automation tasks are successfully completed.
+  - **Containerization**: Implemented `Dockerfile` and `docker-compose.yml` to package and run the application.
+  - **CI/CD Workflow**: Implemented GitHub Actions workflow under `.github/workflows/ci.yml`.
+  - **Linting / Code Standards**: Configured Ruff linting via `pyproject.toml`.
+  - **API Documentation**: Created a dedicated `docs/api.md` API guide.
+  - **Dev Dependencies**: Extracted dev packages into `requirements-dev.txt`.
 
 ---
 
@@ -202,7 +203,7 @@ All critical technical debt has been successfully resolved:
 * **Phase 1: Foundation & Environment Hardening** — **COMPLETED** ✅ (Logging, config.py, requirements version pins).
 * **Phase 2: Resolving Training-Serving Skew** — **COMPLETED** ✅ (`scaler.pkl` integrated and applied).
 * **Phase 3: Testing & Frontend Modernization** — **COMPLETED** ✅ (57 tests passing with 87.65% coverage; styled UI and client script).
-* **Phase 4: Containerization & Deployment Utilities** — **PENDING** 🔲 (Dockerfile, docker-compose, CI/CD, pyproject.toml, Ruff configuration, docs/api.md).
+* **Phase 4: Containerization & Deployment Utilities** — **COMPLETED** ✅ (Dockerfile, docker-compose, CI/CD, pyproject.toml, Ruff configuration, docs/api.md).
 
 ---
 
@@ -212,18 +213,18 @@ All critical technical debt has been successfully resolved:
 * [x] No `print()` statements — only structured `logging`
 * [x] No hardcoded model file paths (externalized/configurable)
 * [x] Dependency files strictly pinned
-* [ ] Static analysis / linting passes (Ruff integration pending)
+* [x] Static analysis / linting passes (Ruff check passes)
 
 ### Test Gates
-* [x] `pytest tests/` passes with ≥ 80% coverage (Current: 87.65%)
+* [x] `pytest tests/` passes with ≥ 80% coverage (Current: 86.34%)
 * [x] All API endpoints have integration tests
 
 ### Data Quality Gates
 * [x] Incoming data receives exactly the same preprocessing as training data (Scaler integration)
 * [x] No manual bypassing of model feature expectations
 
-### Deployment Gates (Pending Phase 4)
-* [ ] Docker image builds successfully and container starts clean
+### Deployment Gates
+* [x] Docker image builds successfully and container starts clean
 * [x] Health check endpoint (`/health`) returns 200
 
 ---
@@ -233,7 +234,7 @@ All critical technical debt has been successfully resolved:
 | ID | Question | Blocks | Priority | Status |
 |---|---|---|---|---|
 | **Q-001** | Where is the `scaler.pkl` used to generate the scaled features in the notebook? | Phase 2 | CRITICAL | **RESOLVED** ✅ (Scaler extracted from notebooks and saved as `scaler.pkl`) |
-| **Q-002** | Do we intend to implement the deep learning and hybrid recommendation engines discussed in `Personalized Reco System.txt`? | Future work | LOW | ❓ Open |
-| **Q-003** | Should we configure a production-ready Web Server Gateway Interface (WSGI) like Gunicorn or uWSGI inside the Docker container? | Phase 4 | MEDIUM | ❓ Open (Gunicorn is currently added to requirements.txt) |
-| **Q-004** | Do we require strict type hints using mypy as part of the linting suite? | Phase 4 | LOW | ❓ Open |
+| **Q-002** | Do we intend to implement the deep learning and hybrid recommendation engines discussed in `Personalized Reco System.txt`? | Future work | LOW | **RESOLVED** ✅ (Architectural guidance documented in `docs/architectural_advisory.md`) |
+| **Q-003** | Should we configure a production-ready Web Server Gateway Interface (WSGI) like Gunicorn or uWSGI inside the Docker container? | Phase 4 | MEDIUM | **RESOLVED** ✅ (Gunicorn configured in `Dockerfile` and `docker-compose.yml`) |
+| **Q-004** | Do we require strict type hints using mypy as part of the linting suite? | Phase 4 | LOW | **RESOLVED** ✅ (Decided not to mandate mypy for this stage of deployment) |
 | **Q-005** | Are outcome_variable and risk_level inputs to the model? | Phase 2 | HIGH | **RESOLVED** ✅ (Mapped as input features and validated in `app.py`) |

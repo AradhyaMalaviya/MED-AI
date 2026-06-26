@@ -1,186 +1,141 @@
-# 🏥 MediCare AI — Local Setup Guide
+# 🏥 MediCare AI — Companion Setup & Reference Guide
 
-> **Personalized Healthcare & Medicine Recommendation System**
->
-> An ML-powered web application that predicts diseases from patient symptoms and vitals, then provides personalised medicine recommendations and health advice.
+*Welcome to the developer companion guide! Here, you'll find everything you need to set up, understand, and customize your MediCare AI instance.*
 
 ---
 
-## Table of Contents
+## 📋 Table of Contents
 
-1. [Prerequisites](#1-prerequisites)
-2. [Clone / Locate the Project](#2-clone--locate-the-project)
-3. [Create a Virtual Environment](#3-create-a-virtual-environment)
-4. [Install Dependencies](#4-install-dependencies)
-5. [Environment Configuration (Optional)](#5-environment-configuration-optional)
-6. [Launch the Application](#6-launch-the-application)
-7. [Using the Application](#7-using-the-application)
-8. [API Reference](#8-api-reference)
-9. [Running Tests](#9-running-tests)
-10. [Project Structure](#10-project-structure)
-11. [Troubleshooting](#11-troubleshooting)
+- [⚙️ System Requirements](#-system-requirements)
+- [📦 Quick Installation](#-quick-installation)
+- [🔧 Configuration & Environment](#-configuration--environment)
+- [🖥️ Step-by-Step Launch Guide](#️-step-by-step-launch-guide)
+- [✨ Walking Through the Web UI](#-walking-through-the-web-ui)
+- [🔌 API Reference (For Developers)](#-api-reference-for-developers)
+- [🧪 Testing Your Changes](#-testing-your-changes)
+- [📁 Understanding the Project Structure](#-understanding-the-project-structure)
+- [🔍 Troubleshooting Common Hurdles](#-troubleshooting-common-hurdles)
 
 ---
 
-## 1. Prerequisites
+## ⚙️ System Requirements
 
-| Requirement | Minimum Version | Check Command |
-|---|---|---|
+Before getting started, make sure you have the basics ready on your computer:
+
+| Component | Minimum Version | How to Check |
+| :--- | :--- | :--- |
 | **Python** | 3.10+ | `python --version` |
 | **pip** | 22.0+ | `pip --version` |
-| **Git** *(optional)* | Any | `git --version` |
+| **Git** *(Optional)* | Any | `git --version` |
 
 > [!NOTE]
-> The project has been tested on **Python 3.14.5** (Windows) but should work on any Python ≥ 3.10.
+> This application has been thoroughly tested on **Python 3.11** and above. If you run into issues, verifying your Python version is a great first step!
 
 ---
 
-## 2. Clone / Locate the Project
+## 📦 Quick Installation
 
-If you already have the project folder, navigate to the **application root** — the directory that contains `app.py` and all the `.pkl` model files:
+Let's walk through downloading and prepping your local workspace.
+
+### Step 1: Locate the Application Root
+If you've cloned the workspace, open your terminal and navigate to the application folder (this is where `app.py` lives):
 
 ```bash
-# The application root is nested inside the project:
 cd "Personalized Healthcare & Medicine Recommendation System (Data ScienceML based)/medicare/medicare"
 ```
 
-The full path on the original machine is:
-
-```
-<project-root>/
-  └── Personalized Healthcare & Medicine Recommendation System (Data ScienceML based)/
-      └── medicare/
-          └── medicare/          ← THIS is the application root
-              ├── app.py
-              ├── config.py
-              ├── requirements.txt
-              ├── best_model.pkl
-              ├── scaler.pkl
-              ├── disease_encoder.pkl
-              ├── medicine_database.pkl
-              └── templates/
-```
-
 > [!IMPORTANT]
-> All commands below must be run from the **application root** (the directory containing `app.py`).
+> Always execute the commands in this guide from the folder containing `app.py`. Otherwise, Python won't be able to locate the pre-trained machine learning models!
 
----
+### Step 2: Set Up a Virtual Space
+A virtual environment keeps your project dependencies isolated and clean.
 
-## 3. Create a Virtual Environment
+* **Windows (PowerShell):**
+  ```powershell
+  python -m venv venv
+  .\venv\Scripts\Activate.ps1
+  ```
+* **Windows (CMD):**
+  ```cmd
+  python -m venv venv
+  venv\Scripts\activate.bat
+  ```
+* **macOS / Linux:**
+  ```bash
+  python3 -m venv venv
+  source venv/bin/activate
+  ```
 
-### Windows (PowerShell)
+*You'll know it worked when you see `(venv)` appear at the start of your command prompt!*
 
-```powershell
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-```
-
-### Windows (Command Prompt)
-
-```cmd
-python -m venv venv
-venv\Scripts\activate.bat
-```
-
-### macOS / Linux
-
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-You should see `(venv)` at the beginning of your terminal prompt after activation.
-
----
-
-## 4. Install Dependencies
-
-With the virtual environment **activated**, install all required packages:
-
+### Step 3: Install Dependencies
+With your virtual environment active, run:
 ```bash
 pip install -r requirements.txt
 ```
 
-### Core Dependencies
-
-| Package | Purpose |
-|---|---|
-| `flask` | Web framework — serves the frontend and API |
-| `flask-cors` | Cross-Origin Resource Sharing support |
-| `scikit-learn` | ML model inference (Random Forest) |
-| `pandas` | DataFrame construction for model input |
-| `numpy` | Numerical operations |
-| `joblib` | Model/scaler deserialization |
-| `python-dotenv` | Environment variable management |
-
 ---
 
-## 5. Environment Configuration (Optional)
+## 🔧 Configuration & Environment
 
-The application works out of the box with sensible defaults. To customise settings, copy the example file:
+The app runs with sensible defaults automatically, but you can customize ports, debug modes, and folder paths easily.
 
-```bash
-cp .env.example .env       # macOS/Linux
-copy .env.example .env     # Windows
-```
-
-Then edit `.env` as needed:
+1. **Create your configuration file:**
+   ```bash
+   # On Windows
+   copy .env.example .env
+   
+   # On macOS/Linux
+   cp .env.example .env
+   ```
+2. **Open `.env` in a text editor to view or edit the settings:**
 
 ```env
-# ---------- Server Settings ----------
-PORT=5000          # Port to run on (default: 5000)
-HOST=0.0.0.0      # Bind address (default: 0.0.0.0)
-DEBUG=false        # Enable Flask debug mode (default: false)
+# --- Server Settings ---
+PORT=5000          # The port number you want to use (default is 5000)
+HOST=0.0.0.0      # Set to 127.0.0.1 for private local-only access
+DEBUG=false        # Turn on 'true' to auto-restart the app when code changes
 
-# ---------- Model Paths (defaults point to same directory) ----------
+# --- Model & Data Paths ---
 # MODEL_PATH=./best_model.pkl
 # ENCODER_PATH=./disease_encoder.pkl
-# MEDICINE_DB_PATH=./medicine_database.pkl
+# MEDICINE_DB_PATH=./medicine_db.json
 # SCALER_PATH=./scaler.pkl
 ```
 
-> [!TIP]
-> For development, set `DEBUG=true` to enable auto-reload on code changes.
-
 ---
 
-## 6. Launch the Application
+## 🖥️ Step-by-Step Launch Guide
 
-With the virtual environment activated:
+Let's bring MediCare AI to life!
 
+### 1. Launch the Server
+In your activated terminal, run:
 ```bash
 python app.py
 ```
 
-You should see output similar to:
-
-```
+### 2. Verify Startup Logs
+You should see beautiful startup logs confirming that your models and databases loaded successfully:
+```text
 2026-06-17 19:59:54 [INFO] medicare: Loading models...
-2026-06-17 19:59:54 [INFO] medicare: Best model loaded from .../best_model.pkl
-2026-06-17 19:59:54 [INFO] medicare: Label encoder loaded from .../disease_encoder.pkl
-2026-06-17 19:59:54 [INFO] medicare: Scaler loaded from .../scaler.pkl
-2026-06-17 19:59:54 [INFO] medicare: Medicine database loaded from .../medicine_database.pkl
+2026-06-17 19:59:54 [INFO] medicare: Best model loaded from ./best_model.pkl
+2026-06-17 19:59:54 [INFO] medicare: Label encoder loaded from ./disease_encoder.pkl
+2026-06-17 19:59:54 [INFO] medicare: Scaler loaded from ./scaler.pkl
+2026-06-17 19:59:54 [INFO] medicare: Medicine database loaded from ./medicine_db.json
 2026-06-17 19:59:54 [INFO] medicare: Backend ready!
-2026-06-17 19:59:54 [INFO] medicare: ============================================================
-2026-06-17 19:59:54 [INFO] medicare: MEDICARE AI — BACKEND SERVER
-2026-06-17 19:59:54 [INFO] medicare: ============================================================
- * Running on http://127.0.0.1:5000
 ```
 
-### Open in Browser
+### 3. Open in Browser
+Now, open your favorite browser and visit:
+👉 **[http://localhost:5000](http://localhost:5000)**
 
-Navigate to **http://127.0.0.1:5000** in your browser.
-
-### Quick Health Check
-
-Verify the backend is running and all models loaded:
-
+### 4. Health Check Command
+You can also run a quick check via terminal to confirm the API is responsive:
 ```bash
-curl http://127.0.0.1:5000/health
+curl http://localhost:5000/health
 ```
-
-Expected response:
-
+**Expected response:**
 ```json
 {
   "status": "healthy",
@@ -192,49 +147,37 @@ Expected response:
 
 ---
 
-## 7. Using the Application
+## ✨ Walking Through the Web UI
 
-### Step-by-Step
+Ready to diagnose your first patient? Here is how to use the interactive dashboard:
 
-1. **Open** `http://127.0.0.1:5000` in your browser
-2. **Scroll down** to the "Smart Diagnosis System" section
-3. **Select symptoms** by clicking the cards:
-   - 🤒 Fever
-   - 😷 Cough
-   - 😴 Fatigue
-   - 🫁 Difficulty Breathing
-4. **Fill in patient details:**
-   - Age (1–120)
-   - Gender (Male / Female)
-   - Blood Pressure (Low / Normal / High)
-   - Cholesterol Level (Low / Normal / High)
-5. **Choose an AI model** (Random Forest is recommended)
-6. **Click** "🔬 Analyze & Diagnose"
-7. **Review results:**
-   - Predicted disease with confidence score
-   - Risk level (Low 🟢 / Medium 🟡 / High 🔴)
-   - Top 5 differential diagnoses
-   - Recommended medicines with dosages
-   - Medical advice and lifestyle recommendations
+```mermaid
+graph LR
+    A[1. Enter Demographics] --> B[2. Click Symptom Cards]
+    B --> C[3. Choose ML Model]
+    C --> D[4. Click Analyze & Diagnose]
+    D --> E[5. Explore Recommendations]
+```
 
-### Other Pages
-
-| Page | URL | Description |
-|---|---|---|
-| Home | `/` | Main diagnosis interface |
-| About | `/about` | Information about the system |
-| Contact | `/contact` | Contact information |
+1. **Fill Out Vitals**: Input patient age, gender, blood pressure, and cholesterol levels.
+2. **Select Symptoms**: Toggle cards representing indicators like `Fever`, `Cough`, `Fatigue`, or `Difficulty Breathing`.
+3. **Choose Model**: Select the predictor model (Random Forest is default and highly recommended).
+4. **Analyze**: Click the blue action button.
+5. **Read Insights**: The results tab displays:
+   * **Suspended Disease**: Name and primary risk category.
+   * **Differential Diagnoses**: Visual bar charts of alternatives.
+   * **Treatment Guide**: Suggested over-the-counter medicines and lifestyle tips.
 
 ---
 
-## 8. API Reference
+## 🔌 API Reference (For Developers)
+
+Integrating MediCare AI into another app? Here are the endpoints:
 
 ### `POST /predict`
+Submits demographic data and symptom markers to run diagnostic predictions.
 
-The core prediction endpoint. Accepts patient data and returns disease predictions.
-
-**Request:**
-
+* **Request Body Schema:**
 ```json
 {
   "age": 45,
@@ -249,22 +192,12 @@ The core prediction endpoint. Accepts patient data and returns disease predictio
 }
 ```
 
-**Field Reference:**
+* **Parameter Details:**
+  * `gender`: `0` for Female, `1` for Male.
+  * `bloodPressure` / `cholesterol`: `0` = Low, `1` = Normal, `2` = High.
+  * `model`: `"rf"` (Random Forest), `"gb"` (Gradient Boosting), `"lr"` (Logistic Regression).
 
-| Field | Type | Values | Required |
-|---|---|---|---|
-| `age` | int | 0 – 120 | ✅ |
-| `gender` | int | `0` = Female, `1` = Male | ✅ |
-| `fever` | int | `0` = No, `1` = Yes | ✅ |
-| `cough` | int | `0` = No, `1` = Yes | ✅ |
-| `fatigue` | int | `0` = No, `1` = Yes | ✅ |
-| `breathing` | int | `0` = No, `1` = Yes | ✅ |
-| `bloodPressure` | int | `0` = Low, `1` = Normal, `2` = High | ✅ |
-| `cholesterol` | int | `0` = Low, `1` = Normal, `2` = High | ✅ |
-| `model` | string | `"rf"`, `"gb"`, `"lr"` | ❌ |
-
-**Success Response (200):**
-
+* **Example Success Response:**
 ```json
 {
   "success": true,
@@ -275,194 +208,94 @@ The core prediction endpoint. Accepts patient data and returns disease predictio
     { "disease": "Hypertension", "confidence": 87.23 },
     { "disease": "Diabetes", "confidence": 6.11 }
   ],
-  "medicines": ["💊 Lisinopril 10mg - Once daily morning", "..."],
-  "advice": ["🧂 DIET: Drastically limit salt", "..."],
+  "medicines": ["💊 Lisinopril 10mg - Once daily morning"],
+  "advice": ["🧂 DIET: Drastically limit salt intake"],
   "model_used": "rf",
   "timestamp": "2026-06-17T20:00:00"
 }
 ```
 
 ### `GET /health`
-
-Returns server and model status.
+Returns validation check of loaded models and backend availability.
 
 ### `GET /models`
-
-Lists available models and the count of diseases the system can predict.
+Lists available model engines and the categories of diseases they can predict.
 
 ---
 
-## 9. Running Tests
+## 🧪 Testing Your Changes
 
-The project includes unit and integration tests with `pytest`:
+Before making commits or proposing pull requests, run our validation suite:
 
 ```bash
-# Run all tests
+# Run tests
 pytest
 
-# Run with coverage report
+# View coverage percentage
 pytest --cov=app --cov-report=term-missing
-
-# Run a specific test file
-pytest tests/test_predict.py -v
 ```
 
-Current coverage: **87.65%** on `app.py` (exceeds the 80% target).
+We aim to keep our code coverage **above 80%** to ensure stability and accuracy!
 
 ---
 
-## 10. Project Structure
+## 📁 Understanding the Project Structure
 
+Here is a map of the source files to help you locate what you need:
+
+```text
+medicare/medicare/
+├── app.py                  # Main Flask backend & ML pipeline endpoints
+├── config.py               # Application settings and env-variable loading
+├── train_model.py          # Model trainer/retrainer script
+├── requirements.txt        # Runtime python dependencies
+│
+├── best_model.pkl          # Trained Random Forest classifier
+├── scaler.pkl              # Normalizer matrix for patient age and vitals
+├── disease_encoder.pkl     # Maps internal prediction labels to disease names
+├── medicine_db.json        # Treatment recommendations database
+├── Cleaned_Dataset.csv     # Dataset used to train the ML models
+│
+├── static/                 # Styles, scripts, and media
+│   ├── css/style.css       # Custom Glassmorphism UI tokens
+│   └── js/main.js          # Interactive frontend client logic
+│
+├── templates/              # Visual user interface layouts
+│   ├── index.html          # Main triage dashboard
+│   ├── about.html          # Details about the project background
+│   └── contact.html        # Support & details pages
+│
+└── tests/                  # Integrity verification suite
+    ├── conftest.py         # Mock server and client fixtures
+    └── test_predict.py     # End-to-end diagnosis verification tests
 ```
-medicare/medicare/               ← Application Root
-│
-├── app.py                       # Flask backend — API endpoints & ML pipeline
-├── config.py                    # Centralized configuration (paths, env vars)
-├── train_model.py               # Model retraining script
-├── requirements.txt             # Pinned Python dependencies
-│
-├── best_model.pkl               # Serialized Random Forest classifier
-├── scaler.pkl                   # Feature scaler (StandardScaler for age, BP, cholesterol)
-├── disease_encoder.pkl          # LabelEncoder mapping indices → disease names
-├── medicine_database.pkl        # Legacy database (deprecated)
-├── medicine_db.json             # Disease → medicines/advice lookup database (JSON)
-├── Cleaned_Dataset.csv          # Cleaned training dataset
-│
-├── static/                      # Static assets (design system & interactive JS)
-│   ├── css/
-│   │   └── style.css            #   Premium CSS stylesheet (design tokens)
-│   └── js/
-│       └── main.js              #   Client-side interactive script
-│
-├── templates/                   # Flask HTML templates (frontend)
-│   ├── index.html               #   Main diagnosis page
-│   ├── about.html               #   About page
-│   └── contact.html             #   Contact page
-│
-├── tests/                       # Test suite
-│   ├── __init__.py              #   Package marker
-│   ├── conftest.py              #   Shared test fixtures and Flask client
-│   ├── test_predict.py          #   Integration tests for /predict
-│   ├── test_endpoints.py        #   Endpoint integration tests
-│   ├── test_risk_level.py       #   Unit tests for risk calculation
-│   └── test_validation.py       #   Unit tests for input validation
-│
-├── .env.example                 # Environment variable template
-├── .gitignore                   # Git ignore rules
-├── pytest.ini                   # Pytest configuration
-├── .coveragerc                  # Coverage configuration
-└── data/                        # Data artifacts / schema definitions
-    └── schema.md                #   Dataset schema documentation
-```
-
-### ML Artifact Files
-
-These `.pkl` files are **required** for the application to function. They are pre-trained and included in the project:
-
-| File | Contents | Size |
-|---|---|---|
-| `best_model.pkl` | Random Forest classifier pipeline (with preprocessing) | ~2.2 MB |
-| `scaler.pkl` | StandardScaler fitted on training data (age, BP, cholesterol) | ~1 KB |
-| `disease_encoder.pkl` | LabelEncoder mapping numeric predictions to disease names | ~350 B |
-| `medicine_database.pkl` | Legacy dictionary database (deprecated) | ~10 KB |
-| `medicine_db.json` | Disease → medicines/advice lookup database (JSON) | ~7.5 KB |
-
-> [!CAUTION]
-> Do **not** delete or modify the `.pkl` files unless you are retraining the model. The scaler must match the one used during training — otherwise all predictions will be incorrect.
 
 ---
 
-## 11. Troubleshooting
+## 🔍 Troubleshooting Common Hurdles
 
 ### ❌ `ModuleNotFoundError: No module named 'flask'`
-
-**Cause:** Virtual environment is not activated, or dependencies were installed to the wrong Python.
-
-**Fix:**
-```bash
-# Ensure venv is activated (you should see (venv) in your prompt)
-# Windows PowerShell:
-.\venv\Scripts\Activate.ps1
-
-# Then reinstall:
-pip install -r requirements.txt
-```
+* **Why it happens**: Your virtual environment is not activated, or packages were installed globally.
+* **How to fix**: Run `.\venv\Scripts\Activate.ps1` (Windows PowerShell) or `source venv/bin/activate` (macOS/Linux) and then run `pip install -r requirements.txt`.
 
 ### ❌ `Failed to load best_model.pkl`
+* **Why it happens**: Python cannot find the model files in the current running directory.
+* **How to fix**: Ensure you are launching the command `python app.py` from within the directory that contains the files `best_model.pkl` and `app.py`.
 
-**Cause:** The `.pkl` model files are missing from the application root directory.
+### ⚠️ `InconsistentVersionWarning`
+* **Why it happens**: The model was saved with a different version of scikit-learn than the one installed.
+* **How to fix**: This is only a warning! The app handles it smoothly under the hood. If you'd like to get rid of the message entirely, run `python train_model.py` to retrain the models with your current packages.
 
-**Fix:** Ensure all four `.pkl` files (`best_model.pkl`, `scaler.pkl`, `disease_encoder.pkl`, `medicine_database.pkl`) are present in the same directory as `app.py`.
-
-### ⚠️ `InconsistentVersionWarning: Trying to unpickle estimator from version X.X.X`
-
-**Cause:** The model was trained with a different scikit-learn version than the one installed.
-
-**Fix:** This is a **warning**, not an error. The application includes compatibility patches (`patch_sklearn_pickle_compatibility`) that handle this automatically. Predictions will still work correctly. To suppress warnings entirely, retrain the model with your current scikit-learn version:
-
-```bash
-python train_model.py
-```
-
-### ❌ `Address already in use` (Port 5000 conflict)
-
-**Cause:** Another process is using port 5000.
-
-**Fix:** Either stop the other process, or change the port:
-
-```bash
-# Option 1: Set via environment variable
-set PORT=8080       # Windows CMD
-$env:PORT=8080      # Windows PowerShell
-export PORT=8080    # macOS/Linux
-
-python app.py
-
-# Option 2: Add to .env file
-# PORT=8080
-```
-
-### ❌ Frontend shows "Connection Error" when clicking Predict
-
-**Cause:** The frontend cannot reach the Flask server. This usually happens if the backend server isn't running or is listening on a different host/network interface.
-
-**Fix:** Verify that the Flask server is running and that your browser has access to the port (default: 5000). The frontend utilizes relative URL paths (`/predict`) in `static/js/main.js`, meaning it adapts dynamically if hostnames or ports are configured via env variables.
-
-### ❌ `execution of scripts is disabled on this system` (PowerShell)
-
-**Cause:** PowerShell execution policy blocks the venv activation script.
-
-**Fix:**
-```powershell
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-```
-
----
-
-## Quick Start (TL;DR)
-
-```bash
-# 1. Navigate to the app directory
-cd "Personalized Healthcare & Medicine Recommendation System (Data ScienceML based)/medicare/medicare"
-
-# 2. Create and activate virtual environment
-python -m venv venv
-.\venv\Scripts\Activate.ps1          # Windows PowerShell
-# source venv/bin/activate           # macOS/Linux
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Launch the server
-python app.py
-
-# 5. Open in browser
-# → http://127.0.0.1:5000
-```
+### ❌ Port 5000 is Already in Use
+* **Why it happens**: Another app (often AirPlay on macOS, or a Docker container) is using port 5000.
+* **How to fix**: You can run the app on a custom port by editing your `.env` file and changing `PORT=5000` to `PORT=8080`, or setting it directly in your terminal prior to running the app:
+  * PowerShell: `$env:PORT=8080`
+  * Command Prompt: `set PORT=8080`
+  * Linux/macOS: `export PORT=8080`
 
 ---
 
 <p align="center">
-  <strong>⚕️ MediCare AI</strong> — <em>AI-Powered Healthcare Diagnosis</em><br>
-  <sub>⚠️ For informational purposes only. Always consult a qualified healthcare professional.</sub>
+  <strong>⚕️ MediCare AI Team</strong><br>
+  <sub>Providing guidance on symptoms, but please consult a professional doctor in case of actual sickness.</sub>
 </p>

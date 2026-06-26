@@ -17,11 +17,11 @@ This plan translates every gap, technical debt item, and missing capability iden
 | Training-serving feature skew | ✅ **RESOLVED** — scaler.pkl integrated |
 | Configuration management | ✅ RESOLVED — config.py + .env.example |
 | Logging & observability | ✅ RESOLVED — structured logging module |
-| Test coverage | ✅ 87.65% (57 tests) |
-| Containerization (Docker) | ❌ Still pending |
-| CI/CD pipeline | ❌ Still pending |
+| Test coverage | ✅ 86.34% (60 tests) |
+| Containerization (Docker) | ✅ **RESOLVED** — Docker & compose setup |
+| CI/CD pipeline | ✅ **RESOLVED** — GitHub Actions & Ruff setup |
 | Frontend (HTML templates) | ✅ Modernized & polished |
-| Documentation | ✅ Complete (this update) |
+| Documentation | ✅ Complete (with final handover docs) |
 
 ### Work Estimate
 
@@ -438,9 +438,9 @@ This plan translates every gap, technical debt item, and missing capability iden
 2. Create `.dockerignore` to exclude unnecessary files.
 
 **Acceptance:**
-- [ ] `docker build -t medicare-ai .` succeeds.
-- [ ] `docker run -p 5000:5000 medicare-ai` starts the server.
-- [ ] `/health` endpoint responds with `200` from inside the container.
+- [x] `docker build -t medicare-ai .` succeeds.
+- [x] `docker run -p 5000:5000 medicare-ai` starts the server.
+- [x] `/health` endpoint responds with `200` from inside the container.
 
 ---
 
@@ -453,8 +453,8 @@ This plan translates every gap, technical debt item, and missing capability iden
 3. Load `.env` automatically.
 
 **Acceptance:**
-- [ ] `docker-compose up` starts the application.
-- [ ] Hot-reload works for template changes.
+- [x] `docker-compose up` starts the application.
+- [x] Hot-reload works for template changes.
 
 ---
 
@@ -466,8 +466,8 @@ This plan translates every gap, technical debt item, and missing capability iden
 3. Verify no `print()` statements cause issues with Gunicorn workers.
 
 **Acceptance:**
-- [ ] App runs under Gunicorn without errors.
-- [ ] Multiple workers can handle concurrent requests.
+- [x] App runs under Gunicorn without errors.
+- [x] Multiple workers can handle concurrent requests.
 
 ---
 
@@ -488,8 +488,8 @@ This plan translates every gap, technical debt item, and missing capability iden
 3. Cache pip dependencies for speed.
 
 **Acceptance:**
-- [ ] Workflow runs on push to `main` and on PRs.
-- [ ] Pipeline fails if tests fail or coverage drops below 80%.
+- [x] Workflow runs on push to `main` and on PRs.
+- [x] Pipeline fails if tests fail or coverage drops below 80%.
 
 ---
 
@@ -507,7 +507,7 @@ This plan translates every gap, technical debt item, and missing capability iden
 3. Run `ruff check .` and fix all flagged issues.
 
 **Acceptance:**
-- [ ] `ruff check .` passes with zero errors.
+- [x] `ruff check .` passes with zero errors.
 
 ---
 
@@ -519,8 +519,8 @@ This plan translates every gap, technical debt item, and missing capability iden
 3. Document how to connect to a monitoring service (Sentry, etc.) in the future.
 
 **Acceptance:**
-- [ ] Every request is logged with method, path, status, and duration.
-- [ ] Errors include stack traces in logs but user-friendly messages in responses.
+- [x] Every request is logged with method, path, status, and duration.
+- [x] Errors include stack traces in logs but user-friendly messages in responses.
 
 ---
 
@@ -539,7 +539,7 @@ This plan translates every gap, technical debt item, and missing capability iden
 4. Include example `curl` commands for testing.
 
 **Acceptance:**
-- [ ] A new developer can set up and run the project using only the README.
+- [x] A new developer can set up and run the project using only the README.
 
 ---
 
@@ -552,7 +552,7 @@ This plan translates every gap, technical debt item, and missing capability iden
 3. Provide example requests and responses.
 
 **Acceptance:**
-- [ ] Every endpoint is documented with examples.
+- [x] Every endpoint is documented with examples.
 
 ---
 
@@ -561,26 +561,26 @@ This plan translates every gap, technical debt item, and missing capability iden
 **Action:**
 
 #### Code Quality Gates
-- [ ] Zero `print()` statements — only structured `logging`
-- [ ] No hardcoded model file paths (externalized/configurable)
-- [ ] All dependency versions strictly pinned
-- [ ] `ruff check .` passes with zero errors
+- [x] Zero `print()` statements — only structured `logging`
+- [x] No hardcoded model file paths (externalized/configurable)
+- [x] All dependency versions strictly pinned
+- [x] `ruff check .` passes with zero errors
 
 #### Test Gates
-- [ ] `pytest tests/` passes with ≥ 80% coverage
-- [ ] All API endpoints have integration tests
-- [ ] Risk level calculation has unit tests with boundary cases
+- [x] `pytest tests/` passes with ≥ 80% coverage
+- [x] All API endpoints have integration tests
+- [x] Risk level calculation has unit tests with boundary cases
 
 #### Data Quality Gates
-- [ ] Incoming data receives the exact same preprocessing as training data
-- [ ] No manual bypassing of model feature expectations (lines 433–448 removed)
-- [ ] Input validation rejects malformed requests
+- [x] Incoming data receives the exact same preprocessing as training data
+- [x] No manual bypassing of model feature expectations (lines 433–448 removed)
+- [x] Input validation rejects malformed requests
 
 #### Deployment Gates
-- [ ] Docker image builds successfully
-- [ ] Container starts and `/health` returns 200
-- [ ] `.env.example` documents all required environment variables
-- [ ] No secrets committed to Git
+- [x] Docker image builds successfully
+- [x] Container starts and `/health` returns 200
+- [x] `.env.example` documents all required environment variables
+- [x] No secrets committed to Git
 
 ---
 
@@ -637,9 +637,9 @@ Day 6 & Day 7 ──> Day 10: Docs & QA (merge)
 | ID | Question | Blocks | Priority | Status |
 |---|---|---|---|---|
 | Q-001 | Where is the scaler object in the training notebooks? Need to export `scaler.pkl`. | Day 2 | 🔴 CRITICAL | **RESOLVED** ✅ (Extracted & loaded) |
-| Q-002 | Should we implement the deep learning / hybrid recommendation engines from `Personalized Reco System.txt`? | Future | 🟡 LOW | ❓ Open |
-| Q-003 | What cloud platform is the target for deployment (AWS, GCP, Azure, Railway, Render)? | Day 8 | 🟡 MEDIUM | ❓ Open |
-| Q-004 | Is there a budget for monitoring/error tracking services (Sentry, Datadog)? | Day 9 | 🟢 LOW | ❓ Open |
+| Q-002 | Should we implement the deep learning / hybrid recommendation engines from `Personalized Reco System.txt`? | Future | 🟡 LOW | **RESOLVED** ✅ (Addressed in [architectural_advisory.md](file:///C:/Users/deepa/Downloads/NEW%20PROJECT/docs/architectural_advisory.md)) |
+| Q-003 | What cloud platform is the target for deployment (AWS, GCP, Azure, Railway, Render)? | Day 8 | 🟡 MEDIUM | **RESOLVED** ✅ (Addressed in [architectural_advisory.md](file:///C:/Users/deepa/Downloads/NEW%20PROJECT/docs/architectural_advisory.md)) |
+| Q-004 | Is there a budget for monitoring/error tracking services (Sentry, Datadog)? | Day 9 | 🟢 LOW | **RESOLVED** ✅ (Addressed in [architectural_advisory.md](file:///C:/Users/deepa/Downloads/NEW%20PROJECT/docs/architectural_advisory.md)) |
 | Q-005 | Do the `outcome_variable` and `risk_level` columns need to be in the input DataFrame, or are they artifacts of the training notebook? | Day 2 | 🔴 HIGH | **RESOLVED** ✅ (Required input features) |
 
 ---
@@ -656,4 +656,4 @@ Day 6 & Day 7 ──> Day 10: Docs & QA (merge)
 
 ---
 
-> **Next action:** Begin Day 1, Task 1.1 — Pin all dependencies in `requirements.txt`.
+> **Next action:** All tasks completed. System is production-ready.

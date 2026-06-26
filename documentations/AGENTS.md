@@ -38,13 +38,18 @@ Application-root files:
 
 | File | Purpose |
 |---|---|
-| `app.py` | Flask app, routes, validation, risk scoring, model loading, prediction response shaping, and fallback medicine data. |
-| `config.py` | Centralizes `.env` loading, artifact paths, host, port, and debug settings. |
+| `app.py` | Flask app, routes, validation, risk scoring, model loading, prediction response shaping, fallback medicine database, Prometheus metrics, and transaction latency timing logs. |
+| `config.py` | Centralizes `.env` loading, artifact paths, host, port, debug, Sentry, and metrics configs. |
 | `train_model.py` | Retrains the Random Forest pipeline and regenerates model artifacts from `Cleaned_Dataset.csv`. |
-| `requirements.txt` | Runtime and dev/test Python dependencies. |
+| `requirements.txt` | Runtime Python dependencies (Flask, Gunicorn, scikit-learn, etc.). |
+| `requirements-dev.txt` | Development-specific dependencies (Ruff, pytest, etc.). |
+| `pyproject.toml` | Ruff code linter configurations. |
+| `Dockerfile` | Production Docker image build instructions. |
+| `docker-compose.yml` | Local Docker Compose orchestration configuration. |
+| `.dockerignore` | Tells Docker which files to ignore during builds (venv, cache, etc.). |
 | `pytest.ini` | Test discovery, pytest markers, strict markers, and coverage defaults. |
 | `.coveragerc` | Coverage source, omit rules, terminal report settings, and `htmlcov/` output directory. |
-| `.env.example` | Template for optional local configuration. Copy to `.env`; never commit real secrets. |
+| `.env.example` | Template for environment variables configuration. Copy to `.env`; never commit real secrets. |
 | `.gitignore` | Ignores local envs, bytecode, secrets, model pickles, editor files, and build output. |
 | `.coverage` | Generated coverage data file. Do not hand-edit. |
 | `Cleaned_Dataset.csv` | Training dataset with 349 rows and columns documented in `data/schema.md`. |
@@ -95,7 +100,7 @@ Use Python 3, 4-space indentation, `snake_case` functions, and `UPPER_SNAKE_CASE
 
 ## Testing Guidelines
 
-Tests use `pytest`, Flask's test client, `pytest-cov`, and fixtures from `tests/conftest.py`. The test suite contains 57 tests across 4 test files with 87.65% line coverage on `app.py`.
+Tests use `pytest`, Flask's test client, `pytest-cov`, and fixtures from `tests/conftest.py`. The test suite contains 60 tests across 5 test files with 86.34% overall line coverage.
 
 | Test file | Coverage area | Test Count / Details |
 |---|---|---|
@@ -105,6 +110,7 @@ Tests use `pytest`, Flask's test client, `pytest-cov`, and fixtures from `tests/
 | `tests/test_predict.py` | Successful prediction shape, top-five sorting, risk output, and missing model/scaler failures. | 8 integration tests |
 | `tests/test_risk_level.py` | High, medium, low, and boundary rules for `calculate_risk_level()`. | 22 unit tests |
 | `tests/test_validation.py` | Valid payloads, missing fields, type errors, ranges, and mixed validation failures. | 21 unit tests |
+| `tests/test_observability.py` | Health/metrics checks, Prometheus metric incrementing, and PHI logging prevention rules. | 4 unit tests |
 
 Add or update tests whenever changing `validate_input()`, `calculate_risk_level()`, route behavior, response JSON, model preprocessing, templates served by routes, or frontend IDs expected by JavaScript.
 
@@ -118,7 +124,7 @@ Use `.env.example` as the only committed environment template. Put machine-speci
 
 ## Commit And Pull Request Guidelines
 
-No Git repository was detected from the analyzed project path, so there is no local commit history to copy. Use concise imperative messages such as `Update prediction validation` or `Regenerate model artifacts`. Pull requests should include a summary, commands run, test results, affected files, screenshots for template/static changes, and explicit notes for changed `.pkl`, CSV, notebook, or generated report files.
+The repository is tracked via Git. Use concise imperative commit messages such as `Update prediction validation` or `Regenerate model artifacts`. Pull requests should include a summary of changes, test commands run, test results, affected files, and explicit notes for changed `.pkl`, CSV, notebook, or generated report files.
 
 ## Agent-Specific Instructions
 

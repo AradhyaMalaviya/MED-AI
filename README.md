@@ -1,163 +1,156 @@
-# MediCare AI — Personalized Healthcare & Medicine Recommendation System
+# ⚕️ MediCare AI — Personalized Healthcare & Medicine Recommendation System
+
+*An intelligent, patient-first assistant powered by machine learning that guides you from symptoms to solutions.*
 
 [![CI Build Status](https://github.com/AradhyaMalaviya/MED-AI/actions/workflows/ci.yml/badge.svg)](https://github.com/AradhyaMalaviya/MED-AI/actions/workflows/ci.yml)
 [![Python Version](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![Test Coverage](https://img.shields.io/badge/coverage-%3E%3D86.3%25-green.svg)](https://htmlpreview.github.io/?https://github.com/AradhyaMalaviya/MED-AI/blob/main/Personalized%20Healthcare%20%26%20Medicine%20Recommendation%20System%20%28Data%20ScienceML%20based%29/medicare/medicare/htmlcov/index.html)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-MediCare AI is an enterprise-grade, machine learning-powered preliminary diagnostic triage system. It accepts demographic profiles and patient symptom arrays, processes them through a mathematically aligned standard scaling pipeline, performs model classification, and couples the prediction with targeted, database-driven medicine recommendations and health advice.
+---
+
+## 🌟 What is MediCare AI?
+
+**MediCare AI** is a modern, web-based preliminary diagnostic companion designed to bridge the gap between symptoms and care. By inputting demographic details and select symptoms, users receive an instant, AI-guided assessment detailing potential health conditions, risk levels, recommended medicines, and actionable lifestyle advice. 
+
+Whether you are a developer exploring medical ML systems, or just curious about how AI can support health triage, MediCare AI offers an intuitive experience with a stunning modern interface.
+
+> [!NOTE]  
+> **A Friendly Note:** MediCare AI is designed as a preliminary advisory tool. It does *not* replace a professional consultation. In a medical emergency, please contact healthcare professionals immediately. 🚑
 
 ---
 
-## 🏗️ System Architecture & Data Flow
+## ✨ Features at a Glance
 
-The application executes prediction requests via a strictly decoupled, low-latency pipeline. The end-to-end data flow operates in a single request-response cycle:
+* **🔬 Smart Predictor Engine**: Uses machine learning to evaluate symptom combinations and patient vitals.
+* **📊 Top Differential Diagnoses**: Displays the primary suspected disease alongside 4 other potential alternatives with confidence percentages.
+* **💊 Medicine Recommendation Guide**: Instantly pulls recommended dosages, schedules, and precautions from our clinical database.
+* **🥗 Actionable Lifestyle Advice**: Offers structured recommendations on dietary adjustments, exercise, and habits.
+* **🎨 Modern Responsive Interface**: Featuring an elegant glassmorphism design, interactive symptom cards, and smooth micro-animations.
+
+---
+
+## 🗺️ How It Works (Data Flow)
+
+MediCare AI works through a simple, low-latency analysis cycle. Here is what happens behind the scenes:
 
 ```mermaid
-graph TD
-    A[Client UI / API Request] -->|HTTP POST JSON Payload| B[Input Validation Layer]
-    B -->|Check constraints / Bad Request 400| C{Is Input Valid?}
-    C -->|No| D[Return Validation Errors JSON]
-    C -->|Yes| E[config.py Configuration Layer]
-    E -->|Read Model & database paths| F[DataFrame Serialization]
-    F -->|Raw features| G[scaler.pkl Transformation Matrix]
-    G -->|Scaled features| H[best_model.pkl Prediction Engine]
-    H -->|Probabilities + Index| I[disease_encoder.pkl Label Decoder]
-    I -->|Decoded Disease Name| J[calculate_risk_level Engine]
-    J -->|Risk Level + Decoded Name| K[medicine_db.json Clinical Database]
-    K -->|Target Recommendations & Advice| L[Result Builder Response Assembler]
-    L -->|JSON Payload / 200 OK| M[Client Response]
+flowchart TD
+    classDef client fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px;
+    classDef process fill:#f3e5f5,stroke:#9c27b0,stroke-width:2px;
+    classDef ml fill:#efebe9,stroke:#795548,stroke-width:2px;
+    classDef db fill:#e8f5e9,stroke:#4caf50,stroke-width:2px;
+
+    User[User Inputs Symptoms & Vitals] -->|1. Submit Request| API[Flask Backend API]:::client
+    API -->|2. Standardize Features| Scaler[Standard Scaler]:::process
+    Scaler -->|3. Feed Cleaned Data| Engine[ML Classifier]:::ml
+    Engine -->|4. Decode Output| LabelEncoder[Label Decoder]:::process
+    LabelEncoder -->|5. Match Disease| DB[(Medicine & Advice DB)]:::db
+    DB -->|6. Assemble Recommendations| Response[Visual JSON / UI Report]:::client
+
+    class User,API,Response client;
+    class Scaler,LabelEncoder process;
+    class Engine ml;
+    class DB db;
 ```
 
-### Flow Narrative
-1. **Client Request**: The frontend or an API client sends an HTTP `POST` request to `/predict` containing raw demographics and binary symptom flags.
-2. **Input Validation**: The request is intercepted by `validate_input()`, verifying type compatibility, structure, and numeric boundaries (e.g., age $0-120$, blood pressure $0-2$).
-3. **Configuration Resolve**: `config.py` loads paths to models, scalers, encoders, and database parameters from environment variables (using fallback structures if `.env` is absent).
-4. **Serialization & Preprocessing**: Raw values for `age`, `blood_pressure`, and `cholesterol_level` are scaled using the fitted standard scaling transformations in `scaler.pkl` to prevent training-serving skew.
-5. **Model Inference**: The scaled features and binary symptom flags are passed to `best_model.pkl` (Random Forest Classifier). Probabilities are extracted and the top 5 predictions are compiled.
-6. **Lookup & Response**: The decoded disease name from `disease_encoder.pkl` is used as a lookup key in `medicine_db.json` to append targeted medicines and clinical advice. A structured JSON payload is returned.
+1. **Your Input**: Enter age, vitals (blood pressure, cholesterol), and common symptoms.
+2. **Precision Preprocessing**: Numeric features are scaled to prevent training bias.
+3. **ML Classification**: The pre-trained Random Forest model analyzes patterns to make predictions.
+4. **Knowledge Retrieval**: The decoded disease maps to `medicine_db.json` for specific treatment insights.
+5. **Clear Output**: Recommendations and risk ratings are formatted in a clean, human-readable layout.
 
 ---
 
-## 🚀 Quick Start Guide (Local Development)
+## 🚀 Quick Start Guide
 
-### 1. Repository Cloning & Directory Navigation
-Clone the repository and change directory to the nested application root:
+Ready to get MediCare AI running locally? Let's get started in just a few steps!
+
+### 1. Grab the Code & Navigate
+Clone the repository and move to the application directory:
 ```bash
 git clone https://github.com/AradhyaMalaviya/MED-AI.git
-cd "MED-AI/Personalized Healthcare & Medicine Recommendation System (Data ScienceML based)/medicare/medicare"
+cd "Personalized Healthcare & Medicine Recommendation System (Data ScienceML based)/medicare/medicare"
 ```
 
-### 2. Virtual Environment Configuration
-Configure a Python virtual environment and activate it:
+### 2. Set Up Your Environment
+Create a clean virtual environment and activate it:
 ```bash
-# Create environment
+# Create
 python -m venv venv
 
-# Activate on Windows (PowerShell)
+# Activate (Windows PowerShell)
 .\venv\Scripts\Activate.ps1
 
-# Activate on Windows (Command Prompt)
+# Activate (Windows CMD)
 venv\Scripts\activate.bat
 
-# Activate on macOS / Linux
+# Activate (macOS / Linux)
 source venv/bin/activate
 ```
 
-### 3. Dependency Installation
-Install all runtime and development dependencies pinned in the manifest:
+### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Environment Variables Initialization
-Create a local `.env` file by copying the template:
+### 4. Initialize Settings
+Create your configuration file from the template:
 ```bash
-copy .env.example .env     # Windows
-cp .env.example .env       # macOS/Linux
+# Windows
+copy .env.example .env
+
+# macOS / Linux
+cp .env.example .env
 ```
 
-Configure the `.env` settings according to your local environment requirements:
-```env
-# ---------- Model / Artifact Paths ----------
-MODEL_PATH=./best_model.pkl
-ENCODER_PATH=./disease_encoder.pkl
-MEDICINE_DB_PATH=./medicine_db.json
-SCALER_PATH=./scaler.pkl
-
-# ---------- Server Settings ----------
-PORT=5000
-HOST=0.0.0.0
-DEBUG=false
-
-# ---------- Observability ----------
-LOG_LEVEL=INFO
-ENABLE_METRICS=true
-SENTRY_DSN=
-SENTRY_ENVIRONMENT=local
-```
-
-### 5. Run the Server
-Start the local server inside the virtual environment:
+### 5. Launch and Explore!
+Start the server:
 ```bash
 python app.py
 ```
-The server will bind to `http://localhost:5000`. You can verify startup health by running `curl http://localhost:5000/health`.
+Open **[http://localhost:5000](http://localhost:5000)** in your browser and run your first diagnosis! 🎉
 
 ---
 
-## 🐳 Production Deployment Guide
+## 🐳 Running with Docker
 
-### Docker Image Compilation
-Build the production Docker image using the provided multi-stage `Dockerfile`:
+Prefer containerized deployments? We've got you covered.
+
+### Single Container
+Build and start the application instantly:
 ```bash
+# Build
 docker build -t medicare-ai .
-```
 
-### Container Invocation
-Run the containerized application mapped to port 5000:
-```bash
+# Run
 docker run -d -p 5000:5000 --name medicare_service medicare-ai
 ```
 
-### Production WSGI Topology
-The Docker container automatically runs the app under a Gunicorn WSGI server using the following production configuration:
-* **Workers**: 2 (Multi-worker topology to handle concurrent requests)
-* **Threads**: 2 (Thread pools for async processing)
-* **Timeout**: 60 seconds
-* **Access & Error Logs**: Logged directly to `/dev/stdout` and `/dev/stderr` for container runtime monitoring.
-
-### Orchestration Local Deployment
-Deploy the full container stack (including operational healthchecks) using Docker Compose:
+### Multi-Container Setup (Docker Compose)
+Deploy the service with built-in healthchecks:
 ```bash
 docker compose up -d --build
 ```
-To bring the service down, run `docker compose down`.
 
 ---
 
-## 🧪 Contributing & Development Workflows
+## 🧪 Testing & Code Quality
 
-To maintain maximum code quality and security, run linting and testing checks before submitting pull requests.
+We maintain high standards of code coverage and styling.
 
-### Linting & Formatting Check (Ruff)
-Run static analysis to enforce coding style and lint rules:
-```bash
-python -m ruff check .
-```
-
-### Running the Test Suite & Coverage Gate
-Execute the unit and integration tests and verify that the line coverage meets the strictly enforced quality gate threshold ($\ge 80\%$):
-```bash
-# Run pytest with coverage checks
-python -m pytest --cov-fail-under=80
-
-# Generate full HTML coverage report
-python -m pytest --cov=. --cov-report=html
-```
-The coverage results can be viewed locally by opening the generated `htmlcov/index.html` report.
+* **Linting & Code Formatting**: Enforced via Ruff.
+  ```bash
+  python -m ruff check .
+  ```
+* **Run Tests**: Powered by PyTest. Make sure tests pass before contributing!
+  ```bash
+  python -m pytest --cov-fail-under=80
+  ```
 
 ---
 
-## ⚖️ License
-Distributed under the MIT License. See `LICENSE` for details.
+## ⚖️ License & Disclaimer
+
+* **License**: Distributed under the MIT License. See `LICENSE` for details.
+* **Disclaimer**: This tool is for informational/educational purposes only. The recommendations provided do not constitute professional medical advice, diagnosis, or treatment. Always consult a healthcare provider for medical concerns.
