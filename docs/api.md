@@ -164,7 +164,7 @@ Returned when the server encounters unexpected failures such as serialized model
 ## 2. GET /health
 
 ### Description
-Provides operational health reporting for load balancers and container orchestration platforms (like Kubernetes or ECS). Ensures that all necessary inference artifacts (ML model, scaler, label encoder, and medicine database) are loaded successfully in memory.
+Provides operational health reporting for load balancers and container orchestration platforms (like Kubernetes or ECS). Ensures that all necessary inference artifacts (ML model, label encoder, and medicine database) are loaded successfully in memory.
 
 ### Success Response (200 OK)
 ```json

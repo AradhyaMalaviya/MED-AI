@@ -28,7 +28,7 @@ Based on the original implementation and architecture plans (`plansdaybyday.md`,
 - **Data Cleanup:** The dataset (`Cleaned_Dataset.csv`) has been processed and is ready for use and future retraining.
 - **Model Generation:** The main Random Forest model was generated and serialized as `best_model.pkl`.
 - **Encoders & Datasets Serialization:** Categorical disease encoder (`disease_encoder.pkl`) and the medicine database (`medicine_database.pkl`) are successfully generated.
-- **Training-Serving Skew Fix:** Extracted and exported the feature scaler (`scaler.pkl`) from the training notebooks. It's successfully integrated into `app.py` to correctly scale user inputs (age, blood pressure, cholesterol) ensuring predictions are mathematically accurate.
+- **Training-Serving Skew Fix:** Consolidated the StandardScaler directly into the scikit-learn training Pipeline saved inside `best_model.pkl`. This eliminates training-serving feature scaling skew while avoiding double scaling and retiring the separate standalone `scaler.pkl` artifact.
 - **Sklearn Compatibility:** Added patches (`patch_sklearn_pickle_compatibility`) inside `app.py` to ensure cross-version compatibility for model files saved with older `scikit-learn` versions.
 
 ### 3. Application Backend (`app.py`)
@@ -60,7 +60,7 @@ Based on the original implementation and architecture plans (`plansdaybyday.md`,
 - **Dockerfile:** Production-ready container using `python:3.11-slim` with a multi-worker Gunicorn server configuration and standard Docker container health checks.
 - **Docker Compose:** Developed `docker-compose.yml` to orchestrate local development and build testing, loading environment variables dynamically.
 - **Dockerignore:** Structured `.dockerignore` to filter out local virtual environments (`venv`), build caches, and sensitive local secrets while preserving ML model pickles and frontend assets.
-- **Health Check Expansion:** Enhanced the `/health` endpoint in `app.py` to return the status of preloaded dependencies (`scaler_loaded` and `medicine_db_loaded`) safely.
+- **Health Check Expansion:** Enhanced the `/health` endpoint in `app.py` to safely report model, encoder, and medicine database loading states.
 
 ### 8. CI/CD, Quality Automation & Observability (Day 9)
 - **CI/CD Pipeline:** Created a GitHub Actions workflow `.github/workflows/ci.yml` that automatically runs Ruff code linting, checks the coverage target (maintaining a strict $\ge 80\%$ threshold), and builds the Docker image on every branch push or pull request.
@@ -122,7 +122,6 @@ C:\Users\deepa\Downloads\NEW PROJECT\
 │           ├── pytest.ini           # Pytest settings and defaults
 │           ├── requirements-dev.txt # Development & testing packages
 │           ├── requirements.txt     # Pinned production app dependencies
-│           ├── scaler.pkl           # Feature standard scaler for patient vitals
 │           ├── train_model.py       # Offline model training & retraining script
 │           ├── static/              # CSS design assets & JavaScript files
 │           │   ├── css/style.css

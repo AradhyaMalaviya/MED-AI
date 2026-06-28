@@ -2,8 +2,8 @@ import pickle
 import warnings
 
 import joblib
-import sklearn
 import pandas as pd
+import sklearn
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer

@@ -53,7 +53,7 @@ python -m pytest --cov-fail-under=80 --cov-report=term-missing
 | **Standardized Data Schema** | Contract constraints documented in `data/schema.md`. | **PASSED** | 2026-06-25 |
 
 #### Verification Checklist
-- [x] Check that `scaler.pkl` features (`scaler.feature_names_in_`) align with training columns: `["age", "blood_pressure", "cholesterol_level"]`.
+- [x] Check that model pipeline features (`best_model.named_steps['pre'].transformers_[0][2]`) align with training numeric columns: `["age", "blood_pressure", "cholesterol_level"]`.
 - [x] Verify that input dataframe columns are exactly aligned with model expectations in `app.py`.
 - [x] Confirm that no bypass assignments exist for scaled parameters in `app.py`.
 
