@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-The runnable product is `medicare-ai-mobile-app-prototype.html`, a self-contained mobile web prototype. It keeps markup, CSS, embedded prediction data, and JavaScript in one file; Google Fonts is the only external browser dependency. `documentationsforthisproject/` contains requirements, architecture notes, plans, and status documents for the wider MediCare AI concept. Those documents mention Flask, Python, and ML artifacts that are not included in this repository snapshot, so verify claims against the root HTML before changing the prototype.
+The runnable product is `medicare-ai-mobile-app-prototype.html`, a self-contained mobile web prototype. It keeps markup, CSS, embedded prediction data, and JavaScript in one file; Google Fonts is the only external browser dependency. `documentationsforthisproject/` contains requirements, architecture notes, plans, and status documents for the wider MediCare AI concept. Those documents mention Flask, Python, and ML artifacts that are included in the workspace root, so verify claims before changing the prototype.
 
 ## Build, Test, and Development Commands
 
@@ -21,7 +21,7 @@ Preserve the existing two-space indentation, semicolons, and dependency-free Jav
 
 ## Testing Guidelines
 
-There is no automated test suite or coverage target. Before submitting, test in a browser at desktop and the `460px` mobile breakpoint. Complete onboarding and the symptom wizard, inspect results and medicines, add/delete history, reload to verify `localStorage`, book/cancel an appointment, switch themes, restart, and confirm the console has no errors. Clear test data with `localStorage.clear()` in DevTools when needed.
+An automated Playwright test suite exists under `.codex-smoke.spec.js`. Before submitting, ensure that the Playwright smoke tests pass successfully. Additionally, test manually in a browser at desktop and the `460px` mobile breakpoint. Complete onboarding and the symptom wizard, inspect results and medicines, add/delete history, reload to verify `localStorage`, book/cancel an appointment, switch themes, restart, and confirm the console has no errors. Clear test data with `localStorage.clear()` in DevTools when needed.
 
 ## Security & Product Safety
 
